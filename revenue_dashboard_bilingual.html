@@ -30,8 +30,8 @@ body::before{content:'';display:block;position:fixed;top:0;left:0;right:0;height
 
 .topbar{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;}
 .topbar-left{display:flex;flex-direction:column;gap:6px;}
-.topbar-left h1{font-size:20px;font-weight:600;letter-spacing:-0.01em;color:var(--text);font-family:var(--font-main);}
-.topbar-left p{font-size:13px;color:var(--text2);font-family:var(--font-main);}
+.topbar-left h1{font-size:30px;font-weight:700;letter-spacing:-0.02em;color:var(--text);font-family:var(--font-main);}
+.topbar-left p{font-size:15px;color:var(--text2);font-family:var(--font-main);margin-top:4px;}
 .topbar-right{display:flex;align-items:center;gap:10px;background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--radius);padding:10px 14px;flex-wrap:wrap;}
 .topbar-right label{font-size:12px;color:var(--text2);white-space:nowrap;font-family:var(--font-main);}
 #totalRev{background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:var(--font-mono);font-size:15px;font-weight:500;padding:4px 6px;width:160px;outline:none;transition:border-color 0.2s;direction:ltr;text-align:right;}
@@ -43,33 +43,47 @@ body::before{content:'';display:block;position:fixed;top:0;left:0;right:0;height
 .rev-progress-pct{font-family:var(--font-mono);font-size:11px;color:var(--text2);min-width:34px;}
 .rev-progress-lbl{font-size:11px;color:var(--text3);}
 
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:1.5rem;}
-.kpi{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(28,34,55,0.06);}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--radius) var(--radius) 0 0;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:1rem;}
+.kpi{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.5rem;position:relative;overflow:hidden;box-shadow:0 1px 6px rgba(28,34,55,0.07);}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0;}
 .kpi.blue::before{background:var(--blue);}
 .kpi.green::before{background:var(--green);}
 .kpi.amber::before{background:var(--amber);}
 .kpi.gray::before{background:var(--text3);}
-.kpi-label{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;font-family:var(--font-main);}
-[dir="rtl"] .kpi-label{letter-spacing:0;font-size:11px;}
-.kpi-value{font-family:var(--font-mono);font-size:17px;font-weight:500;color:var(--text);margin-bottom:4px;direction:ltr;}
+.kpi-label{font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-family:var(--font-main);}
+[dir="rtl"] .kpi-label{letter-spacing:0;font-size:13px;}
+.kpi-value{font-family:var(--font-mono);font-size:26px;font-weight:600;color:var(--text);margin-bottom:6px;direction:ltr;letter-spacing:-0.02em;}
 .kpi-value.positive{color:var(--green);}
 .kpi-value.negative{color:var(--red);}
-.kpi-sub{font-size:11px;color:var(--text2);font-family:var(--font-main);}
-[dir="rtl"] .kpi-sub{font-size:12px;}
+.kpi-sub{font-size:12px;color:var(--text2);font-family:var(--font-main);}
+[dir="rtl"] .kpi-sub{font-size:13px;}
 
-.section-title{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:0.5px solid var(--border);font-family:var(--font-main);}
-[dir="rtl"] .section-title{letter-spacing:0;font-size:12px;}
+/* Balance cards */
+#balanceCards > div{padding:1.4rem 1.5rem !important;box-shadow:0 1px 6px rgba(28,34,55,0.07) !important;}
+.bal-label{font-size:13px !important;font-weight:600 !important;letter-spacing:0.04em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-family:var(--font-main);display:block;}
+[dir="rtl"] .bal-label{letter-spacing:0 !important;}
+.bal-sub{font-size:12px !important;color:var(--text2);margin-top:8px;font-family:var(--font-main);display:block;}
+.bal-input{background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:22px;font-weight:600;padding:4px 0;outline:none;direction:ltr;transition:border-color 0.2s;letter-spacing:-0.02em;width:100%;}
+.bal-sar{font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:600;color:var(--text2);opacity:0.6;margin-right:4px;flex-shrink:0;}
+
+/* SAR prefix in balance cards — same size as number */
+.card-label{font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;}
+[dir="rtl"] .card-label{letter-spacing:0;}
+.card-desc{font-size:12px;color:var(--text3);font-family:var(--font-main);}
+.card-input{width:150px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;padding:7px 10px;outline:none;text-align:right;direction:ltr;transition:border-color 0.2s;}
+
+.section-title{font-size:15px;font-weight:700;letter-spacing:0.02em;text-transform:none;color:var(--text);margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:0.5px solid var(--border);font-family:var(--font-main);}
+[dir="rtl"] .section-title{letter-spacing:0;}
 
 .table-wrap{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto;margin-bottom:1.5rem;box-shadow:0 1px 4px rgba(28,34,55,0.06);}
 table{width:100%;border-collapse:collapse;font-size:13px;}
-thead th{background:var(--surface2);color:var(--text2);font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:10px 14px;text-align:center;border-bottom:0.5px solid var(--border);font-family:var(--font-main);white-space:nowrap;}
-[dir="rtl"] thead th{letter-spacing:0;font-size:11px;}
+thead th{background:var(--surface2);color:var(--text2);font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:10px 14px;text-align:center;border-bottom:0.5px solid var(--border);font-family:var(--font-main);white-space:nowrap;}
+[dir="rtl"] thead th{letter-spacing:0;font-size:12px;}
 tbody tr{border-bottom:0.5px solid var(--border);transition:background 0.15s;}
 tbody tr:last-child{border-bottom:none;}
 tbody tr:hover{background:#eef1f8;}
-tbody td{padding:11px 14px;color:var(--text);vertical-align:middle;font-family:var(--font-main);text-align:center;}
-tfoot td{padding:11px 14px;background:var(--surface2);border-top:0.5px solid var(--border2);font-weight:500;font-family:'IBM Plex Mono',monospace;font-size:12px;text-align:center;}
+tbody td{padding:12px 14px;color:var(--text);vertical-align:middle;font-family:var(--font-main);text-align:center;font-size:14px;}
+tfoot td{padding:12px 14px;background:var(--surface2);border-top:0.5px solid var(--border2);font-weight:600;font-family:'IBM Plex Mono',monospace;font-size:13px;text-align:center;}
 
 .seg-badge{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-size:12px;font-weight:600;font-family:'IBM Plex Mono',monospace;}
 .seg-A{background:var(--blue-dim);color:var(--blue);}
@@ -97,11 +111,13 @@ input.mix-in:focus{border-bottom-color:var(--blue);}
 .pl-row:last-child{border-bottom:none;}
 .pl-result{border-top:1px solid var(--border2);border-bottom:none;margin-top:2px;padding-top:6px;}
 .pl-net{border-top:2px solid var(--border2)!important;margin-top:4px!important;padding-top:8px!important;}
-.pl-label{font-size:12px;color:var(--text2);font-family:var(--font-main);white-space:nowrap;}
-.pl-value{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;direction:ltr;white-space:nowrap;}
-.pl-pct{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);direction:ltr;}
-.pl-pct-sign{font-size:11px;color:var(--text3);}
-input.pct-in{background:transparent;border:none;border-bottom:1px dashed var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:1px 4px;width:50px;text-align:center;outline:none;direction:ltr;}
+.pl-label{font-size:13px;color:var(--text2);font-family:var(--font-main);white-space:nowrap;}
+.pl-value{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;direction:ltr;white-space:nowrap;text-align:right;min-width:110px;display:inline-block;}
+.pl-net .pl-value{font-size:17px;}
+.pl-pct{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text3);direction:ltr;min-width:36px;text-align:right;display:inline-block;}
+.pl-pct-sign{font-size:12px;color:var(--text3);}
+.pl-nums{display:flex;align-items:baseline;gap:8px;flex-shrink:0;}
+input.pct-in{background:transparent;border:none;border-bottom:1px dashed var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:1px 4px;width:50px;text-align:center;outline:none;direction:ltr;}
 input.pct-in:focus{border-bottom-color:var(--blue);}
 </style>
 </head>
@@ -127,7 +143,7 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
     <!-- Insights card -->
     <div id="insightsCard" style="margin-top:14px;background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--radius);padding:12px 14px;width:100%;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <span id="insightsTitle" style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);">Insights & recommendations</span>
+        <span id="insightsTitle" style="font-size:15px;font-weight:700;color:var(--text);font-family:var(--font-main);">Insights & recommendations</span>
         <button onclick="addInsight()" style="background:none;border:none;cursor:pointer;color:var(--blue);font-size:18px;line-height:1;padding:0 2px;" title="Add point">+</button>
       </div>
       <div id="insightsList"></div>
@@ -137,13 +153,11 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
     <div style="display:flex;flex-direction:column;gap:0;width:100%;">
 
       <!-- Header label -->
-      <label id="revLabel" style="font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;">Expected total revenue (SAR)</label>
+      <label id="revLabel" style="font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;">قائمة الدخل المتوقعة</label>
 
       <!-- Revenue row -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <input type="text" inputmode="numeric" id="totalRev" value="120,000,000" />
-        </div>
+        <input type="text" inputmode="numeric" id="totalRev" value="120,000,000" />
         <div class="rev-progress-wrap" style="gap:6px;">
           <div class="rev-progress-bar" style="width:100px;"><div class="rev-progress-fill" id="revProgressFill"></div></div>
           <span class="rev-progress-pct" id="revProgressPct">0%</span>
@@ -157,18 +171,18 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
         <!-- Revenue cost -->
         <div class="pl-row">
           <span id="revCostLabel" class="pl-label">Revenue cost</span>
-          <div style="display:flex;align-items:baseline;gap:8px;">
-            <span id="revCostValue" class="pl-value" style="color:var(--red);">—</span>
+          <div class="pl-nums">
             <span id="revCostPct" class="pl-pct" style="color:var(--red);"></span>
+            <span id="revCostValue" class="pl-value" style="color:var(--red);">—</span>
           </div>
         </div>
 
-        <!-- Gross profit (result line) -->
+        <!-- Gross profit -->
         <div class="pl-row pl-result">
           <span id="revProfitLabel" class="pl-label" style="color:var(--green);">Gross profit</span>
-          <div style="display:flex;align-items:baseline;gap:8px;">
-            <span id="revProfitValue" class="pl-value" style="color:var(--green);">—</span>
+          <div class="pl-nums">
             <span id="revProfitPct" class="pl-pct" style="color:var(--green);"></span>
+            <span id="revProfitValue" class="pl-value" style="color:var(--green);">—</span>
           </div>
         </div>
 
@@ -177,44 +191,46 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
 
         <!-- G&A -->
         <div class="pl-row">
-          <div style="display:flex;align-items:center;gap:6px;">
-            <span id="gaLabel" class="pl-label">G&amp;A expenses</span>
-            <div style="display:flex;align-items:center;gap:3px;">
-              <input id="gaInput" type="text" class="pct-in" placeholder="0" oninput="handlePctInput('ga',this)" />
+          <span id="gaLabel" class="pl-label">G&amp;A expenses</span>
+          <div class="pl-nums">
+            <div style="display:flex;align-items:center;gap:3px;min-width:36px;justify-content:flex-end;">
+              <input id="gaInput" type="text" class="pct-in" placeholder="0" oninput="handlePctInput('ga',this)" style="width:32px;" />
               <span class="pl-pct-sign">%</span>
             </div>
+            <span id="gaValue" class="pl-value">—</span>
           </div>
-          <span id="gaValue" class="pl-value">—</span>
         </div>
 
         <!-- Finance cost -->
         <div class="pl-row">
-          <div style="display:flex;align-items:center;gap:6px;">
-            <span id="finLabel" class="pl-label">Finance cost</span>
-            <div style="display:flex;align-items:center;gap:3px;">
-              <input id="finInput" type="text" class="pct-in" placeholder="0" oninput="handlePctInput('fin',this)" />
+          <span id="finLabel" class="pl-label">Finance cost</span>
+          <div class="pl-nums">
+            <div style="display:flex;align-items:center;gap:3px;min-width:36px;justify-content:flex-end;">
+              <input id="finInput" type="text" class="pct-in" placeholder="0" oninput="handlePctInput('fin',this)" style="width:32px;" />
               <span class="pl-pct-sign">%</span>
             </div>
+            <span id="finValue" class="pl-value">—</span>
           </div>
-          <span id="finValue" class="pl-value">—</span>
         </div>
 
         <!-- Investment properties -->
         <div class="pl-row">
           <span id="invLabel" class="pl-label">Investment properties</span>
-          <div style="display:flex;align-items:baseline;gap:8px;">
-            <span id="invValue" class="pl-value" style="color:var(--text2);">—</span>
-            <input id="invInput" type="text" class="pct-in" style="width:100px;text-align:right;display:none;" placeholder="0" oninput="handleInvInput(this)" onblur="hideInvInput()" />
-            <span id="invEdit" onclick="showInvInput()" style="font-size:10px;color:var(--text3);cursor:pointer;font-family:var(--font-main);border-bottom:1px dashed var(--border2);padding-bottom:1px;">edit</span>
+          <div class="pl-nums">
+            <span id="invEdit" onclick="showInvInput()" style="font-size:10px;color:var(--text3);cursor:pointer;font-family:var(--font-main);border-bottom:1px dashed var(--border2);padding-bottom:1px;min-width:36px;text-align:right;display:inline-block;">edit</span>
+            <div style="display:flex;align-items:baseline;gap:6px;min-width:110px;justify-content:flex-end;">
+              <span id="invValue" class="pl-value" style="color:var(--text2);">—</span>
+              <input id="invInput" type="text" class="pct-in" style="width:100px;text-align:right;display:none;" placeholder="0" oninput="handleInvInput(this)" onblur="hideInvInput()" />
+            </div>
           </div>
         </div>
 
         <!-- Net profit result -->
         <div class="pl-row pl-result pl-net">
           <span id="netLabel" class="pl-label" style="font-weight:600;">Net profit</span>
-          <div style="display:flex;align-items:baseline;gap:8px;">
-            <span id="netValue" class="pl-value" style="font-size:16px;font-weight:600;">—</span>
+          <div class="pl-nums">
             <span id="netPct" class="pl-pct"></span>
+            <span id="netValue" class="pl-value" style="font-size:17px;font-weight:600;">—</span>
           </div>
         </div>
 
@@ -225,7 +241,68 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
 
 <div class="kpi-grid" id="kpiGrid"></div>
 
-<div class="section-title" id="sectionTitle">Segment breakdown</div>
+<!-- Balance cards -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:1.5rem;" id="balanceCards">
+
+  <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(28,34,55,0.06);">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);border-radius:var(--radius) var(--radius) 0 0;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span id="balAR_label" class="bal-label" style="margin-bottom:0;">Accounts receivable</span>
+      <div style="width:34px;height:34px;border-radius:50%;background:rgba(59,111,240,0.10);display:flex;align-items:center;justify-content:center;color:#3b6ff0;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 6H11M5 9H11M5 12H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:0;">
+      <span class="bal-sar">SAR</span>
+      <input id="balAR" type="text" inputmode="numeric" class="bal-input" placeholder="0" oninput="handleBalInput('balAR',this)"
+        onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
+    </div>
+    <span id="balAR_sub" class="bal-sub">Customer balances</span>
+  </div>
+
+  <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(28,34,55,0.06);">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--coral);border-radius:var(--radius) var(--radius) 0 0;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span id="balAP_label" class="bal-label" style="margin-bottom:0;">Supplier payables</span>
+      <div style="width:34px;height:34px;border-radius:50%;background:rgba(217,79,61,0.10);display:flex;align-items:center;justify-content:center;color:#d94f3d;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8.5C3 6.3 4.8 4.5 7 4.5H9C11.2 4.5 13 6.3 13 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="5.5" cy="11" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="10.5" cy="11" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M7.5 11H8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:0;">
+      <span class="bal-sar">SAR</span>
+      <input id="balAP" type="text" inputmode="numeric" class="bal-input" placeholder="0" oninput="handleBalInput('balAP',this)"
+        onfocus="this.style.borderColor='var(--coral)'" onblur="this.style.borderColor='var(--border2)'" />
+    </div>
+    <span id="balAP_sub" class="bal-sub">Supplier commitments</span>
+  </div>
+
+  <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(28,34,55,0.06);">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--amber);border-radius:var(--radius) var(--radius) 0 0;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span id="balPO_label" class="bal-label" style="margin-bottom:0;">Purchase orders</span>
+      <div style="width:34px;height:34px;border-radius:50%;background:rgba(201,138,10,0.10);display:flex;align-items:center;justify-content:center;color:#c98a0a;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="4" y="1.5" width="9" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M7 5H10M7 8H10M7 11H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4 5H2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4 8H2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:0;">
+      <span class="bal-sar">SAR</span>
+      <input id="balPO" type="text" inputmode="numeric" class="bal-input" placeholder="0" oninput="handleBalInput('balPO',this)"
+        onfocus="this.style.borderColor='var(--amber)'" onblur="this.style.borderColor='var(--border2)'" />
+    </div>
+    <span id="balPO_sub" class="bal-sub">Issued purchase orders</span>
+  </div>
+
+  <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(28,34,55,0.06);">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--purple);border-radius:var(--radius) var(--radius) 0 0;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span id="balBG_label" class="bal-label" style="margin-bottom:0;">Bank guarantees</span>
+      <div style="width:34px;height:34px;border-radius:50%;background:rgba(107,79,212,0.10);display:flex;align-items:center;justify-content:center;color:#6b4fd4;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 7L8 2L14 7V14H10V10H6V14H2V7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 10H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:0;">
+      <span class="bal-sar">SAR</span>
+      <input id="balBG" type="text" inputmode="numeric" class="bal-input" placeholder="0" oninput="handleBalInput('balBG',this)"
+        onfocus="this.style.borderColor='var(--purple)'" onblur="this.style.borderColor='var(--border2)'" />
+    </div>
+    <span id="balBG_sub" class="bal-sub">Bank guarantees issued</span>
+  </div>
+
+</div>
+
+<div class="section-title" id="sectionTitle">هيكل تخطيط المبيعات</div>
 
 <div class="table-wrap">
   <table>
@@ -256,9 +333,11 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
     <table id="loansTable">
       <thead>
         <tr>
+          <th id="lth6">Lender</th>
           <th id="lth0">Principal</th>
           <th id="lth1">Interest</th>
           <th id="lth2">Total loan</th>
+          <th id="lth7">Installments paid</th>
           <th id="lth3">Paid</th>
           <th id="lth4">Remaining</th>
           <th id="lth5">% remaining</th>
@@ -282,15 +361,15 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
       <div class="section-title" id="liqSectionTitle" style="margin-bottom:0.75rem;">Quick liquidity limit — banks</div>
       <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(28,34,55,0.06);padding:1.25rem 1.5rem;">
         <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:0.5px solid var(--border);">
-          <div><div id="liqLimitLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Liquidity limit</div><div id="liqLimitDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Minimum required cash threshold</div></div>
-          <input id="liqLimitInput" type="text" inputmode="numeric" placeholder="0" oninput="handleLiqInput(this,'limit')" style="width:140px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;padding:6px 10px;outline:none;text-align:right;direction:ltr;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
+          <div><div id="liqLimitLabel" class="card-label">Liquidity limit</div><div id="liqLimitDesc" class="card-desc">Minimum required cash threshold</div></div>
+          <input id="liqLimitInput" type="text" inputmode="numeric" placeholder="0" oninput="handleLiqInput(this,'limit')" class="card-input" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:0.5px solid var(--border);">
-          <div><div id="liqActualLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Actual liquidity</div><div id="liqActualDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Current cash held in banks</div></div>
-          <input id="liqActualInput" type="text" inputmode="numeric" placeholder="0" oninput="handleLiqInput(this,'actual')" style="width:140px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;padding:6px 10px;outline:none;text-align:right;direction:ltr;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
+          <div><div id="liqActualLabel" class="card-label">Actual liquidity</div><div id="liqActualDesc" class="card-desc">Current cash held in banks</div></div>
+          <input id="liqActualInput" type="text" inputmode="numeric" placeholder="0" oninput="handleLiqInput(this,'actual')" class="card-input" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;">
-          <div><div id="liqResultLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Investable liquidity</div><div id="liqResultDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Actual liquidity − limit</div></div>
+          <div><div id="liqResultLabel" class="card-label">Investable liquidity</div><div id="liqResultDesc" class="card-desc">Actual liquidity − limit</div></div>
           <div style="text-align:right;"><div id="liqResultValue" style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:var(--text2);direction:ltr;">—</div><div id="liqResultPct" style="font-size:11px;color:var(--text3);margin-top:2px;direction:ltr;"></div></div>
         </div>
       </div>
@@ -301,15 +380,15 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
       <div class="section-title" id="finReqSectionTitle" style="margin-bottom:0.75rem;">Required financing</div>
       <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(28,34,55,0.06);padding:1.25rem 1.5rem;">
         <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:0.5px solid var(--border);">
-          <div><div id="finReqLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Required financing</div><div id="finReqDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Target balance − investable liquidity</div></div>
+          <div><div id="finReqLabel" class="card-label">Required financing</div><div id="finReqDesc" class="card-desc">Target balance − investable liquidity</div></div>
           <div style="text-align:right;"><div id="finReqValue" style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--text);direction:ltr;">—</div><div id="finReqNote" style="font-size:10px;color:var(--text3);font-family:var(--font-main);margin-top:2px;">auto-calculated</div></div>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:0.5px solid var(--border);">
-          <div><div id="finLtLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Long-term financing</div><div id="finLtDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Enter amount → working capital auto-adjusts</div></div>
-          <input id="finLtInput" type="text" inputmode="numeric" placeholder="0" oninput="handleFinInput(this,'lt')" style="width:140px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;padding:6px 10px;outline:none;text-align:right;direction:ltr;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
+          <div><div id="finLtLabel" class="card-label">Long-term financing</div><div id="finLtDesc" class="card-desc">Enter amount → working capital auto-adjusts</div></div>
+          <input id="finLtInput" type="text" inputmode="numeric" placeholder="0" oninput="handleFinInput(this,'lt')" class="card-input" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;">
-          <div><div id="finWcLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Working capital financing</div><div id="finWcDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Required financing − long-term</div></div>
+          <div><div id="finWcLabel" class="card-label">Working capital financing</div><div id="finWcDesc" class="card-desc">Required financing − long-term</div></div>
           <div id="finWcValue" style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:var(--text2);direction:ltr;text-align:right;">—</div>
         </div>
       </div>
@@ -324,8 +403,8 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
 
       <!-- Target amount -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:0.5px solid var(--border);">
-        <div><div id="invTgtLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Target amount</div><div id="invTgtDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Planned investment amount</div></div>
-        <input id="invTgtInput" type="text" inputmode="numeric" placeholder="0" oninput="handleInvTgtInput(this,'target')" style="width:140px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;padding:6px 10px;outline:none;text-align:right;direction:ltr;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
+        <div><div id="invTgtLabel" class="card-label">Target amount</div><div id="invTgtDesc" class="card-desc">Planned investment amount</div></div>
+        <input id="invTgtInput" type="text" inputmode="numeric" placeholder="0" oninput="handleInvTgtInput(this,'target')" class="card-input" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
       </div>
 
       <!-- Structure rows 1-5 -->
@@ -339,13 +418,13 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
 
       <!-- Actual investment -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border);">
-        <div><div id="invActualLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Actual investment</div><div id="invActualDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Year-to-date</div></div>
-        <input id="invActualInput" type="text" inputmode="numeric" placeholder="0" oninput="handleInvTgtInput(this,'actual')" style="width:140px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;padding:6px 10px;outline:none;text-align:right;direction:ltr;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
+        <div><div id="invActualLabel" class="card-label">Actual investment</div><div id="invActualDesc" class="card-desc">Year-to-date</div></div>
+        <input id="invActualInput" type="text" inputmode="numeric" placeholder="0" oninput="handleInvTgtInput(this,'actual')" class="card-input" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
       </div>
 
       <!-- Balance result -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;">
-        <div><div id="invBalLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Target balance</div><div id="invBalDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Target − actual investment</div></div>
+        <div><div id="invBalLabel" class="card-label">Target balance</div><div id="invBalDesc" class="card-desc">Target − actual investment</div></div>
         <div style="text-align:right;"><div id="invBalValue" style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:var(--text2);direction:ltr;">—</div></div>
       </div>
 
@@ -376,7 +455,7 @@ var tableBuilt = false;
 var T = {
   en:{
     title:'Planning Performance Dashboard', sub:'Customer segment performance — expected vs actual',
-    revLabel:'Expected total revenue (SAR)', sectionTitle:'Segment breakdown',
+    revLabel:'Expected income statement', sectionTitle:'Sales planning structure',
     th:['Seg.','Profit target','Sales mix','Expected rev.','Achieved rev.','Gap','Progress','Opportunities'],
     kpiLabels:['Total expected','Total achieved','Gap remaining','Active segments'],
     kpiSubs:function(p,r){return['100% target',p+'% of target',r+'% remaining','with actual data'];},
@@ -390,7 +469,7 @@ var T = {
   },
   ar:{
     title:'لوحة معلومات أداء التخطيط', sub:'أداء شرائح العملاء — المتوقع مقابل الفعلي',
-    revLabel:'إجمالي الإيراد المتوقع (ر.س)', sectionTitle:'تفاصيل الشرائح',
+    revLabel:'قائمة الدخل المتوقعة', sectionTitle:'هيكل تخطيط المبيعات',
     th:['الشريحة','هامش الربح','مزيج المبيعات','الإيراد المتوقع','الإيرادات المحققة','الفرق','التقدم','الفرص'],
     kpiLabels:['إجمالي المتوقع','إجمالي المحقق','الفرق المتبقي','الشرائح النشطة'],
     kpiSubs:function(p,r){return['100% من الهدف',p+'% من الهدف',r+'% متبقي','شرائح بها بيانات'];},
@@ -433,7 +512,7 @@ function getVals(){
 
 function fmtVal(n){
   if(n===0) return '—';
-  return n<0 ? 'SAR ('+Math.abs(Math.round(n)).toLocaleString('en-US')+')' : 'SAR '+Math.round(n).toLocaleString('en-US');
+  return n<0 ? '('+Math.abs(Math.round(n)).toLocaleString('en-US')+')' : Math.round(n).toLocaleString('en-US');
 }
 function colorVal(n){ return n<0?'var(--red)':n>0?'var(--green)':'var(--text2)'; }
 
@@ -582,21 +661,52 @@ function updateTableCells(){
   return {totalConsumed:totalConsumed,totalOpp:totalOpp,totalExpected:totalExpected,totalGap:totalGap,overallPct:overallPct,vals:vals};
 }
 
+function fmtKPI(val, cls){
+  if(!val || val==='— / 5' || val.indexOf('/')<0 && val.indexOf('SAR')<0) return '<span class="kpi-value '+cls+'">'+val+'</span>';
+  if(val.indexOf('SAR')===0){
+    var num = val.replace('SAR ','');
+    return '<span class="kpi-value '+cls+'" style="display:flex;align-items:baseline;gap:5px;">'
+      +'<span style="font-size:14px;font-weight:600;color:var(--text2);font-family:var(--font-main);">SAR</span>'
+      +'<span>'+num+'</span>'
+      +'</span>';
+  }
+  return '<span class="kpi-value '+cls+'">'+val+'</span>';
+}
+
 function renderKPIs(totalConsumed,totalOpp,totalExpected,totalGap,overallPct,vals){
   var t = lang();
   var totalAchieved = totalConsumed+totalOpp;
   var remPct = 100-overallPct;
   var subs = t.kpiSubs(overallPct,remPct);
   var kpis = [
-    {label:t.kpiLabels[0],value:fmtSAR(totalExpected), sub:subs[0],cls:'blue', valCls:''},
-    {label:t.kpiLabels[1],value:fmtSAR(totalAchieved), sub:subs[1],cls:'green',valCls:totalAchieved>0?'positive':''},
-    {label:t.kpiLabels[2],value:fmtSAR(totalGap),      sub:subs[2],cls:totalGap<0?'amber':'gray',valCls:totalGap<0?'negative':''},
-    {label:t.kpiLabels[3],value:vals.filter(function(v){return v.consumed>0||v.opp>0;}).length+' / 5',sub:subs[3],cls:'gray',valCls:''}
+    {label:t.kpiLabels[0],value:fmtSAR(totalExpected), sub:subs[0],cls:'blue', valCls:'', icon:'📊'},
+    {label:t.kpiLabels[1],value:fmtSAR(totalAchieved), sub:subs[1],cls:'green',valCls:totalAchieved>0?'positive':'', icon:'✅'},
+    {label:t.kpiLabels[2],value:fmtSAR(totalGap),      sub:subs[2],cls:totalGap<0?'amber':'gray',valCls:totalGap<0?'negative':'', icon:'⏳'},
+    {label:t.kpiLabels[3],value:vals.filter(function(v){return v.consumed>0||v.opp>0;}).length+' / 5',sub:subs[3],cls:'gray',valCls:'', icon:'🏷️'}
   ];
-  document.getElementById('kpiGrid').innerHTML = kpis.map(function(k){
+  var icons = [
+    '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="9" width="3" height="6" rx="1" fill="currentColor" opacity="0.9"/><rect x="6" y="5" width="3" height="10" rx="1" fill="currentColor" opacity="0.9"/><rect x="11" y="1" width="3" height="14" rx="1" fill="currentColor" opacity="0.9"/></svg>',
+    '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8.5L6 12.5L14 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5V8L10.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+    '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="5" cy="5" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="11" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 7.5V8.5C5 9.5 6 10.5 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
+  ];
+  var iconColors = ['#3b6ff0','#0d9e72','#c98a0a','#9099aa'];
+
+  document.getElementById('kpiGrid').innerHTML = kpis.map(function(k,i){
+    var valHtml;
+    if(k.value.indexOf('SAR')===0){
+      var num=k.value.replace('SAR ','');
+      valHtml='<div class="kpi-value '+k.valCls+'">SAR '+num+'</div>';
+    } else {
+      valHtml='<div class="kpi-value '+k.valCls+'">'+k.value+'</div>';
+    }
+    var iconHtml='<div style="width:34px;height:34px;border-radius:50%;background:'+iconColors[i]+'1a;display:flex;align-items:center;justify-content:center;color:'+iconColors[i]+';flex-shrink:0;">'+icons[i]+'</div>';
     return '<div class="kpi '+k.cls+'">'
-      +'<div class="kpi-label">'+k.label+'</div>'
-      +'<div class="kpi-value '+k.valCls+'">'+k.value+'</div>'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'
+        +'<div class="kpi-label" style="margin-bottom:0;">'+k.label+'</div>'
+        +iconHtml
+      +'</div>'
+      +valHtml
       +'<div class="kpi-sub">'+k.sub+'</div>'
       +'</div>';
   }).join('');
@@ -699,6 +809,7 @@ function toggleLang(){
   applyLiqLang(); updateLiq();
   applyInvTgtLang(); updateInvTgt();
   applyFinLang(); updateFinancing();
+  applyBalLang();
 }
 
 document.getElementById('totalRev').addEventListener('input',function(){handleRevInput(this);});
@@ -710,14 +821,21 @@ var pendingSave = false;
 function getState(){
   return {
     totalRev: document.getElementById('totalRev').value,
-    actual: actual.slice(),
-    opps: opps.slice(),
-    mixPct: mixPct.slice(),
-    gaPct: gaPct, finPct: finPct, invAmt: invAmt,
-    isAr: isAr,
-    gaInput: document.getElementById('gaInput')?document.getElementById('gaInput').value:'',
-    finInput: document.getElementById('finInput')?document.getElementById('finInput').value:'',
-    invInput: document.getElementById('invInput')?document.getElementById('invInput').value:''
+    actual: actual.slice(), opps: opps.slice(), mixPct: mixPct.slice(),
+    gaPct: gaPct, finPct: finPct, invAmt: invAmt, isAr: isAr,
+    gaInput:  document.getElementById('gaInput')  ? document.getElementById('gaInput').value  : '',
+    finInput: document.getElementById('finInput') ? document.getElementById('finInput').value : '',
+    loans: loans, loanIdCounter: loanIdCounter,
+    insights: insights, insightIdCounter: insightIdCounter,
+    liqLimit: liqLimit, liqActual: liqActual,
+    invTgt: invTgt,
+    invStruct1Label: document.getElementById('invStruct1Label') ? document.getElementById('invStruct1Label').value : '',
+    invStruct2Label: document.getElementById('invStruct2Label') ? document.getElementById('invStruct2Label').value : '',
+    invStruct3Label: document.getElementById('invStruct3Label') ? document.getElementById('invStruct3Label').value : '',
+    invStruct4Label: document.getElementById('invStruct4Label') ? document.getElementById('invStruct4Label').value : '',
+    invStruct5Label: document.getElementById('invStruct5Label') ? document.getElementById('invStruct5Label').value : '',
+    finLt: finLt,
+    balances: balances
   };
 }
 
@@ -796,12 +914,9 @@ handleInvInput = function(el){
   scheduleSave();
 };
 
-// Warn if leaving with unsaved changes
-window.addEventListener('beforeunload', function(e){
-  if(pendingSave){
-    e.preventDefault();
-    e.returnValue = '';
-  }
+// Warn if leaving with unsaved changes — save immediately on close
+window.addEventListener('beforeunload', function(){
+  try{ localStorage.setItem('rv_dashboard', JSON.stringify(getState())); }catch(e){}
 });
 
 // Online/offline indicator
@@ -815,11 +930,6 @@ window.addEventListener('online', function(){
   saveState();
 });
 
-// Load on start
-loadAllState();
-applyLang();
-render();
-
 /* ── LOANS ── */
 var loans = [];
 var loanIdCounter = 0;
@@ -828,14 +938,14 @@ var LT = {
   en:{
     sectionTitle:'Long-term loans',
     addLabel:'Add loan',
-    headers:['Principal','Interest','Total loan','Paid','Remaining','% remaining'],
+    headers:['Principal','Interest','Total loan','Paid','Remaining','% remaining','Lender','Installments paid'],
     totalLabel:'Total',
     placeholder:'0'
   },
   ar:{
     sectionTitle:'القروض طويلة الأجل',
     addLabel:'إضافة قرض',
-    headers:['أصل القرض','الفائدة','إجمالي القرض','المسدد','المتبقي','% المتبقي'],
+    headers:['أصل القرض','الفائدة','إجمالي القرض','المسدد','المتبقي','% المتبقي','جهة التمويل','عدد الأقساط المدفوعة'],
     totalLabel:'المجموع',
     placeholder:'0'
   }
@@ -848,14 +958,14 @@ function applyLoansLang(){
   var el;
   el=document.getElementById('loansSectionTitle'); if(el) el.textContent=t.sectionTitle;
   el=document.getElementById('addLoanLabel');      if(el) el.textContent=t.addLabel;
-  var lthIds=['lth0','lth1','lth2','lth3','lth4','lth5'];
+  var lthIds=['lth0','lth1','lth2','lth3','lth4','lth5','lth6','lth7'];
   for(var i=0;i<lthIds.length;i++){
-    el=document.getElementById(lthIds[i]); if(el) el.textContent=t.headers[i];
+    el=document.getElementById(lthIds[i]); if(el) el.textContent=t.headers[i<6?i:i];
   }
 }
 
 function addLoanRow(){
-  loans.push({id:loanIdCounter++, principal:0, interest:0, paid:0});
+  loans.push({id:loanIdCounter++, lender:'', principal:0, interest:0, paid:0, installments:0});
   renderLoans();
   scheduleSave();
 }
@@ -863,6 +973,13 @@ function addLoanRow(){
 function removeLoan(id){
   loans = loans.filter(function(l){return l.id!==id;});
   renderLoans();
+  scheduleSave();
+}
+
+function handleLoanText(id, field, el){
+  for(var i=0;i<loans.length;i++){
+    if(loans[i].id===id){ loans[i][field]=el.value; break; }
+  }
   scheduleSave();
 }
 
@@ -914,11 +1031,13 @@ function renderLoanTotals(){
   if(loans.length===0){foot.innerHTML='';return;}
   var totRemPct = totTotal>0?Math.round(totRem/totTotal*100):0;
   foot.innerHTML='<tr>'
-    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;text-align:center;">SAR '+totPrincipal.toLocaleString('en-US')+'</td>'
-    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;text-align:center;">SAR '+totInterest.toLocaleString('en-US')+'</td>'
-    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;text-align:center;">SAR '+totTotal.toLocaleString('en-US')+'</td>'
-    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;text-align:center;">SAR '+totPaid.toLocaleString('en-US')+'</td>'
-    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;text-align:center;color:'+(totRem<0?'var(--red)':'var(--text)')+';">SAR '+Math.abs(totRem).toLocaleString('en-US')+'</td>'
+    +'<td></td>'
+    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;font-weight:600;text-align:center;">'+totPrincipal.toLocaleString('en-US')+'</td>'
+    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;font-weight:600;text-align:center;">'+totInterest.toLocaleString('en-US')+'</td>'
+    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;font-weight:600;text-align:center;">'+totTotal.toLocaleString('en-US')+'</td>'
+    +'<td></td>'
+    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;font-weight:600;text-align:center;">'+totPaid.toLocaleString('en-US')+'</td>'
+    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;font-weight:600;text-align:center;color:'+(totRem<0?'var(--red)':'var(--text)')+';">'+Math.abs(totRem).toLocaleString('en-US')+'</td>'
     +'<td style="text-align:center;">'
       +'<div style="display:flex;align-items:center;justify-content:center;gap:6px;">'
         +'<div style="width:50px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;"><div style="height:100%;background:var(--red);border-radius:2px;width:'+Math.min(100,totRemPct)+'%;"></div></div>'
@@ -947,12 +1066,16 @@ function renderLoans(){
     var principalVal=l.principal?l.principal.toLocaleString('en-US'):'';
     var interestVal=l.interest?l.interest.toLocaleString('en-US'):'';
     var paidVal=l.paid?l.paid.toLocaleString('en-US'):'';
+    var lenderVal = l.lender||'';
+    var instVal   = l.installments||'';
     html+='<tr>'
+      +'<td><input class="actual-in" type="text" value="'+lenderVal+'" placeholder="'+t.placeholder+'" oninput="handleLoanText('+l.id+',\'lender\',this)" style="width:110px;" /></td>'
       +'<td><input class="actual-in" type="text" inputmode="numeric" value="'+principalVal+'" placeholder="'+t.placeholder+'" oninput="handleLoanInput('+l.id+',\'principal\',this)" style="width:110px;" /></td>'
       +'<td><input class="actual-in" type="text" inputmode="numeric" value="'+interestVal+'" placeholder="'+t.placeholder+'" oninput="handleLoanInput('+l.id+',\'interest\',this)" style="width:110px;" /></td>'
-      +'<td id="lt-total-'+l.id+'" style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--text2);">'+(total>0?'SAR '+total.toLocaleString('en-US'):'—')+'</td>'
+      +'<td id="lt-total-'+l.id+'" style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;color:var(--text2);">'+(total>0?total.toLocaleString('en-US'):'—')+'</td>'
+      +'<td><input class="actual-in" type="text" inputmode="numeric" value="'+instVal+'" placeholder="0" oninput="handleLoanText('+l.id+',\'installments\',this)" style="width:70px;" /></td>'
       +'<td><input class="actual-in" type="text" inputmode="numeric" value="'+paidVal+'" placeholder="'+t.placeholder+'" oninput="handleLoanInput('+l.id+',\'paid\',this)" style="width:110px;" /></td>'
-      +'<td id="lt-rem-'+l.id+'" style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;">'+(rem!==0?'SAR '+Math.abs(rem).toLocaleString('en-US'):'—')+'</td>'
+      +'<td id="lt-rem-'+l.id+'" style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;">'+(rem!==0?Math.abs(rem).toLocaleString('en-US'):'—')+'</td>'
       +'<td id="lt-rempct-'+l.id+'">'
         +'<div style="display:flex;align-items:center;justify-content:center;gap:6px;">'
           +'<div style="width:50px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;"><div id="lt-bar-'+l.id+'" style="height:100%;background:var(--red);border-radius:2px;transition:width 0.3s;width:'+Math.min(100,remPct)+'%;"></div></div>'
@@ -965,15 +1088,6 @@ function renderLoans(){
   body.innerHTML=html;
   renderLoanTotals();
 }
-
-// extend getState and loadState for loans
-var _origGetState = getState;
-getState = function(){
-  var s = _origGetState();
-  s.loans = loans;
-  s.loanIdCounter = loanIdCounter;
-  return s;
-};
 
 // Init loans after all definitions
 applyLoansLang();
@@ -1056,14 +1170,6 @@ function renderInsights(){
   }
 }
 
-// extend state for insights
-var _origGetState2 = getState;
-getState = function(){
-  var s=_origGetState2();
-  s.insights=insights; s.insightIdCounter=insightIdCounter;
-  return s;
-};
-
 applyInsightsLang();
 renderInsights();
 
@@ -1140,14 +1246,6 @@ function updateLiq(){
   }
 }
 
-// extend state for liquidity
-var _origGetState3 = getState;
-getState = function(){
-  var s=_origGetState3();
-  s.liqLimit=liqLimit; s.liqActual=liqActual;
-  return s;
-};
-
 applyLiqLang();
 updateLiq();
 
@@ -1157,14 +1255,14 @@ var invTgt = { target:0, struct1:0, struct2:0, struct3:0, struct4:0, struct5:0, 
 var ITV = {
   en:{
     sectionTitle:'Target investment',
-    targetLabel:'Target amount',    targetDesc:'Planned investment amount',
+    targetLabel:'Target amount',    targetDesc:'Target investment amount',
     struct1ph:'Investment type 1',  struct2ph:'Investment type 2',
     actualLabel:'Actual investment',actualDesc:'Year-to-date',
     balLabel:'Target balance',      balDesc:'Target − actual investment'
   },
   ar:{
     sectionTitle:'الاستثمار المستهدف',
-    targetLabel:'المبلغ المستهدف',  targetDesc:'مبلغ الاستثمار المخطط',
+    targetLabel:'المبلغ المستهدف',  targetDesc:'مبلغ الاستثمار المستهدف',
     struct1ph:'نوع الاستثمار 1',   struct2ph:'نوع الاستثمار 2',
     actualLabel:'الاستثمار الفعلي',actualDesc:'منذ بداية العام',
     balLabel:'رصيد المستهدف',      balDesc:'المستهدف − الاستثمار الفعلي'
@@ -1207,19 +1305,6 @@ function updateInvTgt(){
   bv.textContent = bal<0 ? 'SAR ('+Math.abs(bal).toLocaleString('en-US')+')' : 'SAR '+bal.toLocaleString('en-US');
   bv.style.color = bal>=0 ? 'var(--green)' : 'var(--red)';
 }
-
-// extend state
-var _origGetState4 = getState;
-getState = function(){
-  var s=_origGetState4();
-  s.invTgt=invTgt;
-  s.invStruct1Label = document.getElementById('invStruct1Label')?document.getElementById('invStruct1Label').value:'';
-  s.invStruct2Label = document.getElementById('invStruct2Label')?document.getElementById('invStruct2Label').value:'';
-  s.invStruct3Label = document.getElementById('invStruct3Label')?document.getElementById('invStruct3Label').value:'';
-  s.invStruct4Label = document.getElementById('invStruct4Label')?document.getElementById('invStruct4Label').value:'';
-  s.invStruct5Label = document.getElementById('invStruct5Label')?document.getElementById('invStruct5Label').value:'';
-  return s;
-};
 
 applyInvTgtLang();
 updateInvTgt();
@@ -1301,11 +1386,8 @@ updateInvTgt = function(){
   updateFinancing();
 };
 
-// extend state
-var _origGetState5 = getState;
-getState = function(){ var s=_origGetState5(); s.finLt=finLt; return s; };
-
-/* ── UNIFIED LOAD ── */
+applyFinLang();
+updateFinancing();
 function loadAllState(){
   try{
     var raw=localStorage.getItem('rv_dashboard');
@@ -1350,11 +1432,68 @@ function loadAllState(){
     // financing
     if(s.finLt !== undefined){ finLt = s.finLt; var fl=document.getElementById('finLtInput'); if(fl&&finLt) fl.value=finLt.toLocaleString('en-US'); }
 
+    // balances
+    if(s.balances){
+      balances = s.balances;
+      ['balAR','balAP','balPO','balBG'].forEach(function(k){
+        var el=document.getElementById(k); if(el&&balances[k]) el.value=balances[k].toLocaleString('en-US');
+      });
+    }
+
   }catch(e){ console.error('loadAllState error',e); }
 }
 
-applyFinLang();
-updateFinancing();
+/* ── BALANCE CARDS ── */
+var balances = { balAR:0, balAP:0, balPO:0, balBG:0 };
+
+var BAL = {
+  en:{ balAR_label:'Accounts receivable', balAR_sub:'Customer balances',
+       balAP_label:'Supplier payables',   balAP_sub:'Supplier commitments',
+       balPO_label:'Purchase orders',     balPO_sub:'Issued purchase orders',
+       balBG_label:'Bank guarantees',     balBG_sub:'Bank guarantees issued' },
+  ar:{ balAR_label:'أرصدة العملاء',       balAR_sub:'المبالغ المستحقة من العملاء',
+       balAP_label:'التزامات الموردين',    balAP_sub:'المبالغ المستحقة للموردين',
+       balPO_label:'أوامر الشراء المصدرة', balPO_sub:'إجمالي أوامر الشراء',
+       balBG_label:'الضمانات البنكية',      balBG_sub:'الضمانات البنكية الصادرة' }
+};
+
+function applyBalLang(){
+  var t = isAr ? BAL.ar : BAL.en;
+  ['balAR','balAP','balPO','balBG'].forEach(function(k){
+    var lbl=document.getElementById(k+'_label'); if(lbl) lbl.textContent=t[k+'_label'];
+    var sub=document.getElementById(k+'_sub');   if(sub) sub.textContent=t[k+'_sub'];
+  });
+}
+
+function handleBalInput(key, el){
+  var raw=el.value.replace(/[^0-9]/g,'');
+  var num=parseInt(raw)||0;
+  var pos=el.selectionStart, oldLen=el.value.length;
+  el.value = raw ? num.toLocaleString('en-US') : '';
+  var newLen=el.value.length;
+  try{el.setSelectionRange(pos+(newLen-oldLen),pos+(newLen-oldLen));}catch(e){}
+  balances[key]=num;
+  scheduleSave();
+}
+
+/* ── FINAL INIT — after ALL variables and functions defined ── */
+loadAllState();        // restore all saved data
+applyLang();           // apply language
+render();              // render main table + KPIs
+restoreInputValues();  // restore actual/opp/mix inputs
+applyLoansLang();      renderLoans();
+applyInsightsLang();   renderInsights();
+applyLiqLang();        updateLiq();
+applyInvTgtLang();     updateInvTgt();
+applyFinLang();        updateFinancing();
+applyBalLang();
+// restore GA/Fin inputs
+(function(){
+  var s; try{ s=JSON.parse(localStorage.getItem('rv_dashboard')||'{}'); }catch(e){ s={}; }
+  if(s.gaInput  && document.getElementById('gaInput'))  document.getElementById('gaInput').value  = s.gaInput;
+  if(s.finInput && document.getElementById('finInput')) document.getElementById('finInput').value = s.finInput;
+  if(s.invAmt){ var iv=document.getElementById('invInput'); if(iv){ iv.value=s.invAmt.toLocaleString?s.invAmt.toLocaleString('en-US'):s.invAmt; hideInvInput(); updateRevCost(); } }
+})();
 
 </script>
 </body>
