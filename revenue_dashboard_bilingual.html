@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="htmlRoot">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة معلومات أداء التخطيط</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg:#f4f6fb; --surface:#ffffff; --surface2:#eef1f8;
+  --border:rgba(99,115,155,0.15); --border2:rgba(99,115,155,0.25);
+  --text:#1c2237; --text2:#5a6585; --text3:#9aa3bc;
+  --blue:#3b6ff0; --blue-dim:rgba(59,111,240,0.10);
+  --green:#0d9e72; --green-dim:rgba(13,158,114,0.10);
+  --amber:#c98a0a; --amber-dim:rgba(201,138,10,0.10);
+  --purple:#6b4fd4; --purple-dim:rgba(107,79,212,0.10);
+  --coral:#d94f3d; --coral-dim:rgba(217,79,61,0.10);
+  --red:#c0392b; --radius:10px; --radius-sm:6px;
+  --font-main:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+[dir="rtl"] { --font-main:'Tajawal',sans-serif; --font-mono:'Tajawal',sans-serif; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-main);background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1.5rem;}
+body::before{content:'';display:block;position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#3b6ff0 0%,#6b4fd4 50%,#0d9e72 100%);z-index:100;}
+
+.lang-btn{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:20px;padding:5px 14px;color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font-main);white-space:nowrap;}
+.lang-btn:hover{background:var(--surface);color:var(--text);border-color:var(--blue);}
+.top-actions{display:flex;align-items:center;justify-content:flex-end;margin-bottom:1rem;}
+
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;}
+.topbar-left{display:flex;flex-direction:column;gap:6px;}
+.topbar-left h1{font-size:20px;font-weight:600;letter-spacing:-0.01em;color:var(--text);font-family:var(--font-main);}
+.topbar-left p{font-size:13px;color:var(--text2);font-family:var(--font-main);}
+.topbar-right{display:flex;align-items:center;gap:10px;background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--radius);padding:10px 14px;flex-wrap:wrap;}
+.topbar-right label{font-size:12px;color:var(--text2);white-space:nowrap;font-family:var(--font-main);}
+#totalRev{background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:var(--font-mono);font-size:15px;font-weight:500;padding:4px 6px;width:160px;outline:none;transition:border-color 0.2s;direction:ltr;text-align:right;}
+#totalRev:focus{border-bottom-color:var(--blue);}
+.rev-formatted{font-family:var(--font-mono);font-size:13px;color:var(--blue);font-weight:500;}
+.rev-progress-wrap{display:flex;align-items:center;gap:8px;}
+.rev-progress-bar{width:160px;height:5px;background:#d8dde8;border-radius:3px;overflow:hidden;}
+.rev-progress-fill{height:100%;width:0%;background:var(--green);border-radius:3px;transition:width 0.4s ease;}
+.rev-progress-pct{font-family:var(--font-mono);font-size:11px;color:var(--text2);min-width:34px;}
+.rev-progress-lbl{font-size:11px;color:var(--text3);}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:1.5rem;}
+.kpi{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(28,34,55,0.06);}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--radius) var(--radius) 0 0;}
+.kpi.blue::before{background:var(--blue);}
+.kpi.green::before{background:var(--green);}
+.kpi.amber::before{background:var(--amber);}
+.kpi.gray::before{background:var(--text3);}
+.kpi-label{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;font-family:var(--font-main);}
+[dir="rtl"] .kpi-label{letter-spacing:0;font-size:11px;}
+.kpi-value{font-family:var(--font-mono);font-size:17px;font-weight:500;color:var(--text);margin-bottom:4px;direction:ltr;}
+.kpi-value.positive{color:var(--green);}
+.kpi-value.negative{color:var(--red);}
+.kpi-sub{font-size:11px;color:var(--text2);font-family:var(--font-main);}
+[dir="rtl"] .kpi-sub{font-size:12px;}
+
+.section-title{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:0.5px solid var(--border);font-family:var(--font-main);}
+[dir="rtl"] .section-title{letter-spacing:0;font-size:12px;}
+
+.table-wrap{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto;margin-bottom:1.5rem;box-shadow:0 1px 4px rgba(28,34,55,0.06);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{background:var(--surface2);color:var(--text2);font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:10px 14px;text-align:center;border-bottom:0.5px solid var(--border);font-family:var(--font-main);white-space:nowrap;}
+[dir="rtl"] thead th{letter-spacing:0;font-size:11px;}
+tbody tr{border-bottom:0.5px solid var(--border);transition:background 0.15s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:#eef1f8;}
+tbody td{padding:11px 14px;color:var(--text);vertical-align:middle;font-family:var(--font-main);text-align:center;}
+tfoot td{padding:11px 14px;background:var(--surface2);border-top:0.5px solid var(--border2);font-weight:500;font-family:'IBM Plex Mono',monospace;font-size:12px;text-align:center;}
+
+.seg-badge{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-size:12px;font-weight:600;font-family:'IBM Plex Mono',monospace;}
+.seg-A{background:var(--blue-dim);color:var(--blue);}
+.seg-B{background:var(--green-dim);color:var(--green);}
+.seg-C{background:var(--amber-dim);color:var(--amber);}
+.seg-D{background:var(--purple-dim);color:var(--purple);}
+.seg-E{background:var(--coral-dim);color:var(--coral);}
+
+input.actual-in{background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:3px 6px;width:110px;text-align:center;outline:none;transition:border-color 0.2s;direction:ltr;}
+input.actual-in:focus{border-bottom-color:var(--blue);}
+input.mix-in{background:transparent;border:none;border-bottom:1px dashed var(--border2);color:var(--text2);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:1px 2px;width:36px;text-align:center;outline:none;transition:border-color 0.2s;direction:ltr;}
+input.mix-in:focus{border-bottom-color:var(--blue);}
+
+.prog-wrap{display:flex;align-items:center;justify-content:center;gap:8px;}
+.prog-bar{width:60px;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;transition:width 0.4s ease;}
+.prog-pct{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);min-width:30px;direction:ltr;}
+
+.neg{color:var(--red);}
+.muted{color:var(--text2);}
+.footer{text-align:center;font-size:11px;color:var(--text3);padding-top:1rem;border-top:0.5px solid var(--border);margin-top:0.5rem;font-family:var(--font-main);}
+
+/* P&L card styles */
+.pl-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--border);}
+.pl-row:last-child{border-bottom:none;}
+.pl-result{border-top:1px solid var(--border2);border-bottom:none;margin-top:2px;padding-top:6px;}
+.pl-net{border-top:2px solid var(--border2)!important;margin-top:4px!important;padding-top:8px!important;}
+.pl-label{font-size:12px;color:var(--text2);font-family:var(--font-main);white-space:nowrap;}
+.pl-value{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;direction:ltr;white-space:nowrap;}
+.pl-pct{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);direction:ltr;}
+.pl-pct-sign{font-size:11px;color:var(--text3);}
+input.pct-in{background:transparent;border:none;border-bottom:1px dashed var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:1px 4px;width:50px;text-align:center;outline:none;direction:ltr;}
+input.pct-in:focus{border-bottom-color:var(--blue);}
+</style>
+</head>
+<body>
+
+<div class="top-actions">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div id="saveStatus" style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);font-family:var(--font-main);opacity:0;transition:opacity 0.4s;">
+      <span id="saveIcon" style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;"></span>
+      <span id="saveText">Saved</span>
+    </div>
+    <button class="lang-btn" onclick="toggleLang()">
+      <span>🇸🇦</span><span id="langBtnLabel">عربي</span>
+    </button>
+  </div>
+</div>
+
+<div class="topbar" style="align-items:flex-start;">
+  <div class="topbar-left" style="flex:1;min-width:0;">
+    <h1 id="titleMain">لوحة معلومات أداء التخطيط</h1>
+    <p id="titleSub">Customer segment performance — expected vs actual</p>
+
+    <!-- Insights card -->
+    <div id="insightsCard" style="margin-top:14px;background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--radius);padding:12px 14px;width:100%;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span id="insightsTitle" style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);">Insights & recommendations</span>
+        <button onclick="addInsight()" style="background:none;border:none;cursor:pointer;color:var(--blue);font-size:18px;line-height:1;padding:0 2px;" title="Add point">+</button>
+      </div>
+      <div id="insightsList"></div>
+    </div>
+  </div>
+  <div class="topbar-right" style="align-items:flex-start;min-width:320px;">
+    <div style="display:flex;flex-direction:column;gap:0;width:100%;">
+
+      <!-- Header label -->
+      <label id="revLabel" style="font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;">Expected total revenue (SAR)</label>
+
+      <!-- Revenue row -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="text" inputmode="numeric" id="totalRev" value="120,000,000" />
+        </div>
+        <div class="rev-progress-wrap" style="gap:6px;">
+          <div class="rev-progress-bar" style="width:100px;"><div class="rev-progress-fill" id="revProgressFill"></div></div>
+          <span class="rev-progress-pct" id="revProgressPct">0%</span>
+          <span class="rev-progress-lbl" id="revProgressLabel">achieved</span>
+        </div>
+      </div>
+
+      <!-- P&L lines -->
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:0;">
+
+        <!-- Revenue cost -->
+        <div class="pl-row">
+          <span id="revCostLabel" class="pl-label">Revenue cost</span>
+          <div style="display:flex;align-items:baseline;gap:8px;">
+            <span id="revCostValue" class="pl-value" style="color:var(--red);">—</span>
+            <span id="revCostPct" class="pl-pct" style="color:var(--red);"></span>
+          </div>
+        </div>
+
+        <!-- Gross profit (result line) -->
+        <div class="pl-row pl-result">
+          <span id="revProfitLabel" class="pl-label" style="color:var(--green);">Gross profit</span>
+          <div style="display:flex;align-items:baseline;gap:8px;">
+            <span id="revProfitValue" class="pl-value" style="color:var(--green);">—</span>
+            <span id="revProfitPct" class="pl-pct" style="color:var(--green);"></span>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div style="border-top:0.5px solid var(--border);margin:6px 0;"></div>
+
+        <!-- G&A -->
+        <div class="pl-row">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span id="gaLabel" class="pl-label">G&amp;A expenses</span>
+            <div style="display:flex;align-items:center;gap:3px;">
+              <input id="gaInput" type="text" class="pct-in" placeholder="0" oninput="handlePctInput('ga',this)" />
+              <span class="pl-pct-sign">%</span>
+            </div>
+          </div>
+          <span id="gaValue" class="pl-value">—</span>
+        </div>
+
+        <!-- Finance cost -->
+        <div class="pl-row">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span id="finLabel" class="pl-label">Finance cost</span>
+            <div style="display:flex;align-items:center;gap:3px;">
+              <input id="finInput" type="text" class="pct-in" placeholder="0" oninput="handlePctInput('fin',this)" />
+              <span class="pl-pct-sign">%</span>
+            </div>
+          </div>
+          <span id="finValue" class="pl-value">—</span>
+        </div>
+
+        <!-- Investment properties -->
+        <div class="pl-row">
+          <span id="invLabel" class="pl-label">Investment properties</span>
+          <div style="display:flex;align-items:baseline;gap:8px;">
+            <span id="invValue" class="pl-value" style="color:var(--text2);">—</span>
+            <input id="invInput" type="text" class="pct-in" style="width:100px;text-align:right;display:none;" placeholder="0" oninput="handleInvInput(this)" onblur="hideInvInput()" />
+            <span id="invEdit" onclick="showInvInput()" style="font-size:10px;color:var(--text3);cursor:pointer;font-family:var(--font-main);border-bottom:1px dashed var(--border2);padding-bottom:1px;">edit</span>
+          </div>
+        </div>
+
+        <!-- Net profit result -->
+        <div class="pl-row pl-result pl-net">
+          <span id="netLabel" class="pl-label" style="font-weight:600;">Net profit</span>
+          <div style="display:flex;align-items:baseline;gap:8px;">
+            <span id="netValue" class="pl-value" style="font-size:16px;font-weight:600;">—</span>
+            <span id="netPct" class="pl-pct"></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="kpi-grid" id="kpiGrid"></div>
+
+<div class="section-title" id="sectionTitle">Segment breakdown</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th style="width:120px;" id="th0">Seg.</th>
+        <th style="width:80px;" id="th1">Profit target</th>
+        <th style="width:130px;" id="th2">Sales mix</th>
+        <th style="width:120px;" id="th3">Expected rev.</th>
+        <th style="width:130px;" id="th4">Achieved rev.</th>
+        <th style="width:130px;" id="th7">Opportunities</th>
+        <th style="width:110px;" id="th5">Gap</th>
+        <th style="width:110px;" id="th6">Progress</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+    <tfoot id="tableFooter"></tfoot>
+  </table>
+</div>
+
+<!-- Long-term loans card -->
+<div id="loansSection" style="margin-bottom:1.5rem;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+    <div class="section-title" id="loansSectionTitle" style="margin-bottom:0;border-bottom:none;padding-bottom:0;">Long-term loans</div>
+    <button onclick="addLoanRow()" style="display:inline-flex;align-items:center;gap:5px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius-sm);padding:5px 12px;font-size:12px;font-family:var(--font-main);cursor:pointer;font-weight:500;" id="addLoanBtn">+ <span id="addLoanLabel">Add loan</span></button>
+  </div>
+  <div class="table-wrap">
+    <table id="loansTable">
+      <thead>
+        <tr>
+          <th id="lth0">Principal</th>
+          <th id="lth1">Interest</th>
+          <th id="lth2">Total loan</th>
+          <th id="lth3">Paid</th>
+          <th id="lth4">Remaining</th>
+          <th id="lth5">% remaining</th>
+          <th style="width:40px;"></th>
+        </tr>
+      </thead>
+      <tbody id="loansBody"></tbody>
+      <tfoot id="loansFoot"></tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- Bottom section: 2-col layout -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;align-items:stretch;">
+
+  <!-- LEFT COLUMN: Liquidity + Financing stacked -->
+  <div style="display:flex;flex-direction:column;gap:1rem;">
+
+    <!-- Card: Quick liquidity -->
+    <div>
+      <div class="section-title" id="liqSectionTitle" style="margin-bottom:0.75rem;">Quick liquidity limit — banks</div>
+      <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(28,34,55,0.06);padding:1.25rem 1.5rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:0.5px solid var(--border);">
+          <div><div id="liqLimitLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Liquidity limit</div><div id="liqLimitDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Minimum required cash threshold</div></div>
+          <input id="liqLimitInput" type="text" inputmode="numeric" placeholder="0" oninput="handleLiqInput(this,'limit')" style="width:140px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;padding:6px 10px;outline:none;text-align:right;direction:ltr;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:0.5px solid var(--border);">
+          <div><div id="liqActualLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Actual liquidity</div><div id="liqActualDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Current cash held in banks</div></div>
+          <input id="liqActualInput" type="text" inputmode="numeric" placeholder="0" oninput="handleLiqInput(this,'actual')" style="width:140px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;padding:6px 10px;outline:none;text-align:right;direction:ltr;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;">
+          <div><div id="liqResultLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Investable liquidity</div><div id="liqResultDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Actual liquidity − limit</div></div>
+          <div style="text-align:right;"><div id="liqResultValue" style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:var(--text2);direction:ltr;">—</div><div id="liqResultPct" style="font-size:11px;color:var(--text3);margin-top:2px;direction:ltr;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Required financing -->
+    <div>
+      <div class="section-title" id="finReqSectionTitle" style="margin-bottom:0.75rem;">Required financing</div>
+      <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(28,34,55,0.06);padding:1.25rem 1.5rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:0.5px solid var(--border);">
+          <div><div id="finReqLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Required financing</div><div id="finReqDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Target balance − investable liquidity</div></div>
+          <div style="text-align:right;"><div id="finReqValue" style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--text);direction:ltr;">—</div><div id="finReqNote" style="font-size:10px;color:var(--text3);font-family:var(--font-main);margin-top:2px;">auto-calculated</div></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:0.5px solid var(--border);">
+          <div><div id="finLtLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Long-term financing</div><div id="finLtDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Enter amount → working capital auto-adjusts</div></div>
+          <input id="finLtInput" type="text" inputmode="numeric" placeholder="0" oninput="handleFinInput(this,'lt')" style="width:140px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;padding:6px 10px;outline:none;text-align:right;direction:ltr;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;">
+          <div><div id="finWcLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Working capital financing</div><div id="finWcDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Required financing − long-term</div></div>
+          <div id="finWcValue" style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:var(--text2);direction:ltr;text-align:right;">—</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end left column -->
+
+  <!-- RIGHT COLUMN: Investment target (full height) -->
+  <div style="display:flex;flex-direction:column;">
+    <div class="section-title" id="invTgtSectionTitle" style="margin-bottom:0.75rem;">Target investment</div>
+    <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(28,34,55,0.06);padding:1.25rem 1.5rem;flex:1;">
+
+      <!-- Target amount -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:0.5px solid var(--border);">
+        <div><div id="invTgtLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Target amount</div><div id="invTgtDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Planned investment amount</div></div>
+        <input id="invTgtInput" type="text" inputmode="numeric" placeholder="0" oninput="handleInvTgtInput(this,'target')" style="width:140px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;padding:6px 10px;outline:none;text-align:right;direction:ltr;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
+      </div>
+
+      <!-- Structure rows 1-5 -->
+      <div id="invStructRows">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border);"><input id="invStruct1Label" type="text" placeholder="Investment type 1" oninput="scheduleSave()" style="flex:1;background:transparent;border:none;border-bottom:1px dashed var(--border2);color:var(--text);font-family:var(--font-main);font-size:12px;padding:2px 4px;outline:none;margin-right:10px;" /><input id="invStruct1Input" type="text" inputmode="numeric" placeholder="0" oninput="handleInvTgtInput(this,'struct1')" style="width:120px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:5px 8px;outline:none;text-align:right;direction:ltr;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" /></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border);"><input id="invStruct2Label" type="text" placeholder="Investment type 2" oninput="scheduleSave()" style="flex:1;background:transparent;border:none;border-bottom:1px dashed var(--border2);color:var(--text);font-family:var(--font-main);font-size:12px;padding:2px 4px;outline:none;margin-right:10px;" /><input id="invStruct2Input" type="text" inputmode="numeric" placeholder="0" oninput="handleInvTgtInput(this,'struct2')" style="width:120px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:5px 8px;outline:none;text-align:right;direction:ltr;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" /></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border);"><input id="invStruct3Label" type="text" placeholder="Investment type 3" oninput="scheduleSave()" style="flex:1;background:transparent;border:none;border-bottom:1px dashed var(--border2);color:var(--text);font-family:var(--font-main);font-size:12px;padding:2px 4px;outline:none;margin-right:10px;" /><input id="invStruct3Input" type="text" inputmode="numeric" placeholder="0" oninput="handleInvTgtInput(this,'struct3')" style="width:120px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:5px 8px;outline:none;text-align:right;direction:ltr;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" /></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border);"><input id="invStruct4Label" type="text" placeholder="Investment type 4" oninput="scheduleSave()" style="flex:1;background:transparent;border:none;border-bottom:1px dashed var(--border2);color:var(--text);font-family:var(--font-main);font-size:12px;padding:2px 4px;outline:none;margin-right:10px;" /><input id="invStruct4Input" type="text" inputmode="numeric" placeholder="0" oninput="handleInvTgtInput(this,'struct4')" style="width:120px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:5px 8px;outline:none;text-align:right;direction:ltr;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" /></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border);"><input id="invStruct5Label" type="text" placeholder="Investment type 5" oninput="scheduleSave()" style="flex:1;background:transparent;border:none;border-bottom:1px dashed var(--border2);color:var(--text);font-family:var(--font-main);font-size:12px;padding:2px 4px;outline:none;margin-right:10px;" /><input id="invStruct5Input" type="text" inputmode="numeric" placeholder="0" oninput="handleInvTgtInput(this,'struct5')" style="width:120px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:5px 8px;outline:none;text-align:right;direction:ltr;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" /></div>
+      </div>
+
+      <!-- Actual investment -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border);">
+        <div><div id="invActualLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Actual investment</div><div id="invActualDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Year-to-date</div></div>
+        <input id="invActualInput" type="text" inputmode="numeric" placeholder="0" oninput="handleInvTgtInput(this,'actual')" style="width:140px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;padding:6px 10px;outline:none;text-align:right;direction:ltr;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
+      </div>
+
+      <!-- Balance result -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;">
+        <div><div id="invBalLabel" style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2);font-family:var(--font-main);margin-bottom:4px;">Target balance</div><div id="invBalDesc" style="font-size:11px;color:var(--text3);font-family:var(--font-main);">Target − actual investment</div></div>
+        <div style="text-align:right;"><div id="invBalValue" style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:var(--text2);direction:ltr;">—</div></div>
+      </div>
+
+    </div>
+  </div><!-- end right column -->
+
+</div>
+
+<div class="footer" id="footerText">Revenue Tracker · Built for Saudi market context · All values in SAR</div>
+
+<script>
+var SEG = [
+  {id:'A',margin:'4%', profitPct:0.04, color:'#3d8ef0'},
+  {id:'B',margin:'15%',profitPct:0.15, color:'#3ecf8e'},
+  {id:'C',margin:'30%',profitPct:0.30, color:'#f5a623'},
+  {id:'D',margin:'40%',profitPct:0.40, color:'#9b7fff'},
+  {id:'E',margin:'50%',profitPct:0.50, color:'#ff6b6b'}
+];
+var actual  = [0,0,0,0,0];
+var opps    = [0,0,0,0,0];
+var mixPct  = [25,8,12,16,39];
+var gaPct   = 0;   // G&A % (can be negative)
+var finPct  = 0;   // Finance cost % (can be negative)
+var invAmt  = 0;   // Investment properties absolute amount
+var isAr    = false;
+var tableBuilt = false;
+
+var T = {
+  en:{
+    title:'Planning Performance Dashboard', sub:'Customer segment performance — expected vs actual',
+    revLabel:'Expected total revenue (SAR)', sectionTitle:'Segment breakdown',
+    th:['Seg.','Profit target','Sales mix','Expected rev.','Achieved rev.','Gap','Progress','Opportunities'],
+    kpiLabels:['Total expected','Total achieved','Gap remaining','Active segments'],
+    kpiSubs:function(p,r){return['100% target',p+'% of target',r+'% remaining','with actual data'];},
+    totalLabel:'Total', gaugeLabel:'achieved', segPrefix:'Client',
+    revCostLabel:'Revenue cost', revCostSub:'expected - profit margin',
+    revProfitLabel:'Gross profit',
+    gaLabel:'G&A expenses', finLabel:'Finance cost',
+    invLabel:'Investment properties', netLabel:'Net profit',
+    footer:'Planning Performance Dashboard · Built for Saudi market context · All values in SAR',
+    langBtn:'عربي', placeholder:'0'
+  },
+  ar:{
+    title:'لوحة معلومات أداء التخطيط', sub:'أداء شرائح العملاء — المتوقع مقابل الفعلي',
+    revLabel:'إجمالي الإيراد المتوقع (ر.س)', sectionTitle:'تفاصيل الشرائح',
+    th:['الشريحة','هامش الربح','مزيج المبيعات','الإيراد المتوقع','الإيرادات المحققة','الفرق','التقدم','الفرص'],
+    kpiLabels:['إجمالي المتوقع','إجمالي المحقق','الفرق المتبقي','الشرائح النشطة'],
+    kpiSubs:function(p,r){return['100% من الهدف',p+'% من الهدف',r+'% متبقي','شرائح بها بيانات'];},
+    totalLabel:'المجموع', gaugeLabel:'إنجاز', segPrefix:'عميل فئة',
+    revCostLabel:'تكلفة الإيرادات', revCostSub:'المتوقع - هامش الربح',
+    revProfitLabel:'مجمل الربح',
+    gaLabel:'المصاريف العمومية والإدارية', finLabel:'تكلفة التمويل',
+    invLabel:'أرباح تقييم عقارات استثمارية', netLabel:'صافي الربح',
+    footer:'لوحة معلومات أداء التخطيط · مبني للسوق السعودي · جميع القيم بالريال السعودي',
+    langBtn:'English', placeholder:'0'
+  }
+};
+
+function lang(){ return isAr ? T.ar : T.en; }
+function fmt(n){ return (n<0?'(':'')+Math.abs(Math.round(n)).toLocaleString('en-US')+(n<0?')':''); }
+function fmtSAR(n){ return 'SAR '+fmt(n); }
+function getTotal(){ return parseInt(document.getElementById('totalRev').value.replace(/[^0-9]/g,''))||0; }
+
+function getEffectiveMix(){
+  var sumAD = mixPct[0]+mixPct[1]+mixPct[2]+mixPct[3];
+  var eVal  = Math.max(0, 100 - sumAD);
+  return [mixPct[0],mixPct[1],mixPct[2],mixPct[3],eVal].map(function(v){return v/100;});
+}
+
+function getVals(){
+  var total = getTotal();
+  var mix = getEffectiveMix();
+  return SEG.map(function(s,i){
+    return {
+      id:s.id, margin:s.margin, color:s.color,
+      profitPct:s.profitPct,
+      mix:mix[i],
+      expected:total*mix[i],
+      consumed:actual[i],
+      opp:opps[i],
+      gap:(total*mix[i])-actual[i]-opps[i]
+    };
+  });
+}
+
+function fmtVal(n){
+  if(n===0) return '—';
+  return n<0 ? 'SAR ('+Math.abs(Math.round(n)).toLocaleString('en-US')+')' : 'SAR '+Math.round(n).toLocaleString('en-US');
+}
+function colorVal(n){ return n<0?'var(--red)':n>0?'var(--green)':'var(--text2)'; }
+
+function updateRevCost(){
+  var vals = getVals();
+  var totalExp = vals.reduce(function(a,v){return a+v.expected;},0);
+
+  // Revenue cost = sum of (expected_i * (1 - profitPct_i)) expressed negative
+  var totalCost = 0;
+  for(var i=0;i<vals.length;i++) totalCost += vals[i].expected*(1-vals[i].profitPct);
+  totalCost = -totalCost;
+
+  // Gross profit = revenue + cost (cost is negative)
+  var grossProfit = totalExp + totalCost;
+
+  // G&A and finance: % of expected (sign as entered)
+  var gaAmt  = totalExp * gaPct / 100;
+  var finAmt = totalExp * finPct / 100;
+
+  // Net profit
+  var netProfit = grossProfit + gaAmt + finAmt + invAmt;
+
+  var costPctDisp   = totalExp>0 ? Math.round(Math.abs(totalCost)/totalExp*100)  : 0;
+  var grossPctDisp  = totalExp>0 ? Math.round(grossProfit/totalExp*100)           : 0;
+  var netPctDisp    = totalExp>0 ? Math.round(netProfit/totalExp*100)             : 0;
+
+  var t = lang();
+
+  // Revenue cost row
+  var lbl=document.getElementById('revCostLabel'); if(lbl) lbl.textContent=t.revCostLabel;
+  var cv=document.getElementById('revCostValue');  if(cv){ cv.textContent=fmtVal(totalCost); cv.style.color=colorVal(totalCost); }
+  var cp=document.getElementById('revCostPct');    if(cp){ cp.textContent=totalExp?'-'+costPctDisp+'%':''; cp.style.color='var(--red)'; }
+
+  // Gross profit row
+  var plbl=document.getElementById('revProfitLabel'); if(plbl) plbl.textContent=t.revProfitLabel;
+  var pv=document.getElementById('revProfitValue');   if(pv){ pv.textContent=fmtVal(grossProfit); pv.style.color=colorVal(grossProfit); }
+  var pp=document.getElementById('revProfitPct');     if(pp){ pp.textContent=totalExp?grossPctDisp+'%':''; pp.style.color=colorVal(grossProfit); }
+
+  // G&A row
+  var gv=document.getElementById('gaValue'); if(gv){ gv.textContent=gaPct!==0?fmtVal(gaAmt):'—'; gv.style.color=colorVal(gaAmt); }
+  var gl=document.getElementById('gaLabel'); if(gl) gl.textContent=t.gaLabel;
+
+  // Finance cost row
+  var fv=document.getElementById('finValue'); if(fv){ fv.textContent=finPct!==0?fmtVal(finAmt):'—'; fv.style.color=colorVal(finAmt); }
+  var fl=document.getElementById('finLabel'); if(fl) fl.textContent=t.finLabel;
+
+  // Investment row
+  var il=document.getElementById('invLabel'); if(il) il.textContent=t.invLabel;
+  var iv=document.getElementById('invValue');
+  if(iv){
+    iv.textContent = invAmt===0 ? '—' : fmtVal(invAmt);
+    iv.style.color = colorVal(invAmt);
+  }
+
+  // Net profit row
+  var nl=document.getElementById('netLabel'); if(nl) nl.textContent=t.netLabel;
+  var nv=document.getElementById('netValue'); if(nv){ nv.textContent=fmtVal(netProfit); nv.style.color=colorVal(netProfit); }
+  var np=document.getElementById('netPct');   if(np){ np.textContent=totalExp?netPctDisp+'%':''; np.style.color=colorVal(netProfit); }
+}
+
+function updateProgress(){
+  var vals = getVals();
+  var totalExp = vals.reduce(function(a,v){return a+v.expected;},0);
+  var totalAch = vals.reduce(function(a,v){return a+v.consumed+v.opp;},0);
+  var pct = totalExp>0?Math.min(100,Math.round(totalAch/totalExp*100)):0;
+  var color = pct>=100?'#3ecf8e':pct>=60?'#f5a623':'#e05252';
+  var fill=document.getElementById('revProgressFill');
+  if(fill){fill.style.width=pct+'%';fill.style.background=color;}
+  var pctEl=document.getElementById('revProgressPct');
+  if(pctEl){pctEl.textContent=pct+'%';pctEl.style.color=color;}
+  var lbl=document.getElementById('revProgressLabel');
+  if(lbl) lbl.textContent=lang().gaugeLabel;
+}
+
+function buildMixCell(v, i){
+  var pct = Math.round(v.mix*100);
+  var bar = '<div style="width:50px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;">'
+    +'<div id="mix-bar-'+i+'" style="width:'+pct+'%;height:100%;background:'+v.color+';border-radius:2px;transition:width 0.3s;"></div>'
+    +'</div>';
+  var ctrl;
+  if(i < 4){
+    ctrl = '<input class="mix-in" id="mix-inp-'+i+'" type="text" inputmode="numeric"'
+      +' value="'+mixPct[i]+'" data-idx="'+i+'" oninput="handleMixInput(this)" />'
+      +'<span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--text2);">%</span>';
+  } else {
+    ctrl = '<span id="mix-val-E" style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--amber);direction:ltr;">'+pct+'%</span>';
+  }
+  return '<div style="display:flex;align-items:center;justify-content:center;gap:6px;">'+bar+ctrl+'</div>';
+}
+
+function buildTable(){
+  var t = lang();
+  var vals = getVals();
+  var html = '';
+  for(var i=0;i<vals.length;i++){
+    var v = vals[i];
+    var cp = v.expected>0?Math.min(100,Math.round((v.consumed+v.opp)/v.expected*100)):0;
+    var gapTxt = v.gap<0?'('+fmt(Math.abs(v.gap))+')':fmt(v.gap);
+    html += '<tr>'
+      +'<td><div style="display:flex;align-items:center;justify-content:center;gap:6px;"><span style="font-size:12px;color:var(--text2);font-family:var(--font-main);white-space:nowrap;" id="seg-lbl-'+i+'">'+lang().segPrefix+'</span><span class="seg-badge seg-'+v.id+'">'+v.id+'</span></div></td>'
+      +'<td class="muted" style="font-size:12px;font-family:\'IBM Plex Mono\',monospace;">'+v.margin+'</td>'
+      +'<td>'+buildMixCell(v,i)+'</td>'
+      +'<td id="td-exp-'+i+'" class="muted" style="font-size:12px;font-family:\'IBM Plex Mono\',monospace;direction:ltr;">'+fmtSAR(v.expected)+'</td>'
+      +'<td><input class="actual-in" id="inp-'+i+'" type="text" inputmode="numeric" value="" placeholder="'+t.placeholder+'" data-idx="'+i+'" oninput="handleActualInput(this)" /></td>'
+      +'<td><input class="actual-in" id="opp-'+i+'" type="text" inputmode="numeric" value="" placeholder="'+t.placeholder+'" data-idx="'+i+'" oninput="handleOppInput(this)" /></td>'
+      +'<td id="td-gap-'+i+'" class="'+(v.gap<0?'neg':'muted')+'" style="font-size:12px;font-family:\'IBM Plex Mono\',monospace;direction:ltr;">'+gapTxt+'</td>'
+      +'<td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" id="pf-'+i+'" style="width:'+cp+'%;background:'+v.color+';"></div></div><span class="prog-pct" id="pp-'+i+'">'+cp+'%</span></div></td>'
+      +'</tr>';
+  }
+  document.getElementById('tableBody').innerHTML = html;
+  tableBuilt = true;
+}
+
+function updateTableCells(){
+  var vals = getVals();
+  var totalConsumed=0, totalOpp=0, totalExpected=0;
+  for(var i=0;i<vals.length;i++){
+    var v=vals[i];
+    totalConsumed+=v.consumed; totalOpp+=v.opp; totalExpected+=v.expected;
+    var cp = v.expected>0?Math.min(100,Math.round((v.consumed+v.opp)/v.expected*100)):0;
+    var e=document.getElementById('td-exp-'+i); if(e) e.textContent=fmtSAR(v.expected);
+    var g=document.getElementById('td-gap-'+i);
+    if(g){g.textContent=v.gap<0?'('+fmt(Math.abs(v.gap))+')':fmt(v.gap);g.className=v.gap<0?'neg':'muted';}
+    var pf=document.getElementById('pf-'+i); if(pf) pf.style.width=cp+'%';
+    var pp=document.getElementById('pp-'+i); if(pp) pp.textContent=cp+'%';
+    // mix bar
+    var mb=document.getElementById('mix-bar-'+i);
+    if(mb) mb.style.width=Math.round(v.mix*100)+'%';
+  }
+  // E value display
+  var eVal=Math.round(getEffectiveMix()[4]*100);
+  var eDisp=document.getElementById('mix-val-E'); if(eDisp) eDisp.textContent=eVal+'%';
+  var ebar=document.getElementById('mix-bar-4'); if(ebar) ebar.style.width=eVal+'%';
+
+  var totalGap = totalExpected-totalConsumed-totalOpp;
+  var overallPct = totalExpected>0?Math.round((totalConsumed+totalOpp)/totalExpected*100):0;
+  var t = lang();
+  document.getElementById('tableFooter').innerHTML='<tr>'
+    +'<td colspan="3" class="muted" style="font-size:11px;font-family:var(--font-main);">'+t.totalLabel+'</td>'
+    +'<td style="direction:ltr;">'+fmtSAR(totalExpected)+'</td>'
+    +'<td style="color:var(--green);direction:ltr;">'+fmtSAR(totalConsumed)+'</td>'
+    +'<td style="color:var(--amber);direction:ltr;">'+fmtSAR(totalOpp)+'</td>'
+    +'<td class="'+(totalGap<0?'neg':'muted')+'" style="direction:ltr;">'+(totalGap<0?'('+fmt(Math.abs(totalGap))+')':fmt(totalGap))+'</td>'
+    +'<td style="font-size:11px;color:var(--text2);direction:ltr;">'+overallPct+'% overall</td>'
+    +'</tr>';
+  return {totalConsumed:totalConsumed,totalOpp:totalOpp,totalExpected:totalExpected,totalGap:totalGap,overallPct:overallPct,vals:vals};
+}
+
+function renderKPIs(totalConsumed,totalOpp,totalExpected,totalGap,overallPct,vals){
+  var t = lang();
+  var totalAchieved = totalConsumed+totalOpp;
+  var remPct = 100-overallPct;
+  var subs = t.kpiSubs(overallPct,remPct);
+  var kpis = [
+    {label:t.kpiLabels[0],value:fmtSAR(totalExpected), sub:subs[0],cls:'blue', valCls:''},
+    {label:t.kpiLabels[1],value:fmtSAR(totalAchieved), sub:subs[1],cls:'green',valCls:totalAchieved>0?'positive':''},
+    {label:t.kpiLabels[2],value:fmtSAR(totalGap),      sub:subs[2],cls:totalGap<0?'amber':'gray',valCls:totalGap<0?'negative':''},
+    {label:t.kpiLabels[3],value:vals.filter(function(v){return v.consumed>0||v.opp>0;}).length+' / 5',sub:subs[3],cls:'gray',valCls:''}
+  ];
+  document.getElementById('kpiGrid').innerHTML = kpis.map(function(k){
+    return '<div class="kpi '+k.cls+'">'
+      +'<div class="kpi-label">'+k.label+'</div>'
+      +'<div class="kpi-value '+k.valCls+'">'+k.value+'</div>'
+      +'<div class="kpi-sub">'+k.sub+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function restoreInputValues(){
+  for(var i=0;i<SEG.length;i++){
+    var a=document.getElementById('inp-'+i); if(a) a.value=actual[i]?actual[i].toLocaleString('en-US'):'';
+    var o=document.getElementById('opp-'+i); if(o) o.value=opps[i]?opps[i].toLocaleString('en-US'):'';
+    if(i<4){var m=document.getElementById('mix-inp-'+i);if(m)m.value=mixPct[i];}
+  }
+}
+
+function render(){
+  if(!tableBuilt){ buildTable(); restoreInputValues(); }
+  var r = updateTableCells();
+  renderKPIs(r.totalConsumed,r.totalOpp,r.totalExpected,r.totalGap,r.overallPct,r.vals);
+  updateProgress();
+  updateRevCost();
+}
+
+function applyFormatInput(el, arr, idx){
+  var raw = el.value.replace(/[^0-9]/g,'');
+  var num = parseInt(raw)||0;
+  arr[idx] = num;
+  var pos=el.selectionStart, oldLen=el.value.length;
+  el.value = raw ? num.toLocaleString('en-US') : '';
+  var newLen=el.value.length;
+  try{el.setSelectionRange(pos+(newLen-oldLen),pos+(newLen-oldLen));}catch(e){}
+  render();
+}
+function handleActualInput(el){ applyFormatInput(el,actual,parseInt(el.dataset.idx)); }
+function handleOppInput(el)   { applyFormatInput(el,opps,  parseInt(el.dataset.idx)); }
+
+function handleMixInput(el){
+  var idx = parseInt(el.dataset.idx);
+  var raw = el.value.replace(/[^0-9]/g,'');
+  mixPct[idx] = Math.min(100, parseInt(raw)||0);
+  var r = updateTableCells();
+  renderKPIs(r.totalConsumed,r.totalOpp,r.totalExpected,r.totalGap,r.overallPct,r.vals);
+  updateProgress();
+  updateRevCost();
+}
+
+function handlePctInput(field, el){
+  var raw = el.value.replace(/[^0-9.\-]/g,'');
+  var num = parseFloat(raw)||0;
+  if(field==='ga')  gaPct  = num;
+  if(field==='fin') finPct = num;
+  updateRevCost();
+}
+function handleInvInput(el){
+  var raw = el.value.replace(/[^0-9\-]/g,'');
+  invAmt = parseInt(raw)||0;
+  updateRevCost();
+}
+function showInvInput(){
+  var inp=document.getElementById('invInput');
+  var val=document.getElementById('invValue');
+  var edt=document.getElementById('invEdit');
+  if(inp){inp.style.display='inline-block';inp.value=invAmt||'';inp.focus();}
+  if(val) val.style.display='none';
+  if(edt) edt.style.display='none';
+}
+function hideInvInput(){
+  var inp=document.getElementById('invInput');
+  var val=document.getElementById('invValue');
+  var edt=document.getElementById('invEdit');
+  if(inp) inp.style.display='none';
+  if(val) val.style.display='inline';
+  if(edt) edt.style.display='inline';
+}
+function handleRevInput(el){
+  var raw = el.value.replace(/[^0-9]/g,'');
+  var num = parseInt(raw)||0;
+  var pos=el.selectionStart, oldLen=el.value.length;
+  el.value = raw ? num.toLocaleString('en-US') : '';
+  var newLen=el.value.length;
+  try{el.setSelectionRange(pos+(newLen-oldLen),pos+(newLen-oldLen));}catch(e){}
+  render();
+}
+
+function applyLang(){
+  var t = lang();
+  document.getElementById('htmlRoot').setAttribute('lang',isAr?'ar':'en');
+  document.getElementById('htmlRoot').setAttribute('dir', isAr?'rtl':'ltr');
+  var ids={titleMain:t.title,titleSub:t.sub,revLabel:t.revLabel,sectionTitle:t.sectionTitle,footerText:t.footer,langBtnLabel:t.langBtn,revCostLabel:t.revCostLabel,revCostSub:t.revCostSub,revProfitLabel:t.revProfitLabel,gaLabel:t.gaLabel,finLabel:t.finLabel,invLabel:t.invLabel,netLabel:t.netLabel};
+  for(var k in ids){var el=document.getElementById(k);if(el)el.textContent=ids[k];}
+  document.title=t.title;
+  for(var i=0;i<5;i++){var sl=document.getElementById('seg-lbl-'+i);if(sl)sl.textContent=t.segPrefix;}
+  var thIds=['th0','th1','th2','th3','th4','th5','th6','th7'];
+  for(var i=0;i<thIds.length;i++){var el2=document.getElementById(thIds[i]);if(el2)el2.textContent=t.th[i];}
+}
+
+function toggleLang(){
+  isAr=!isAr; tableBuilt=false;
+  applyLang(); render();
+  applyLoansLang(); renderLoans();
+  applyInsightsLang(); renderInsights();
+  applyLiqLang(); updateLiq();
+  applyInvTgtLang(); updateInvTgt();
+  applyFinLang(); updateFinancing();
+}
+
+document.getElementById('totalRev').addEventListener('input',function(){handleRevInput(this);});
+
+/* ── AUTOSAVE ── */
+var saveTimer = null;
+var pendingSave = false;
+
+function getState(){
+  return {
+    totalRev: document.getElementById('totalRev').value,
+    actual: actual.slice(),
+    opps: opps.slice(),
+    mixPct: mixPct.slice(),
+    gaPct: gaPct, finPct: finPct, invAmt: invAmt,
+    isAr: isAr,
+    gaInput: document.getElementById('gaInput')?document.getElementById('gaInput').value:'',
+    finInput: document.getElementById('finInput')?document.getElementById('finInput').value:'',
+    invInput: document.getElementById('invInput')?document.getElementById('invInput').value:''
+  };
+}
+
+function saveState(){
+  try {
+    localStorage.setItem('rv_dashboard', JSON.stringify(getState()));
+    showSaveStatus(true);
+    pendingSave = false;
+  } catch(e) {
+    showSaveStatus(false);
+  }
+}
+
+function loadState(){
+  try {
+    var raw = localStorage.getItem('rv_dashboard');
+    if(!raw) return;
+    var s = JSON.parse(raw);
+    if(s.totalRev) document.getElementById('totalRev').value = s.totalRev;
+    if(s.actual)  for(var i=0;i<s.actual.length;i++) actual[i]=s.actual[i];
+    if(s.opps)    for(var i=0;i<s.opps.length;i++)   opps[i]=s.opps[i];
+    if(s.mixPct)  for(var i=0;i<s.mixPct.length;i++) mixPct[i]=s.mixPct[i];
+    if(s.gaPct  !== undefined) gaPct  = s.gaPct;
+    if(s.finPct !== undefined) finPct = s.finPct;
+    if(s.invAmt !== undefined) invAmt = s.invAmt;
+    if(s.isAr   !== undefined) isAr   = s.isAr;
+    if(s.gaInput  && document.getElementById('gaInput'))  document.getElementById('gaInput').value  = s.gaInput;
+    if(s.finInput && document.getElementById('finInput')) document.getElementById('finInput').value = s.finInput;
+    if(s.invAmt) {
+      var iv=document.getElementById('invInput'); if(iv) iv.value=s.invAmt;
+    }
+  } catch(e) {}
+}
+
+function showSaveStatus(ok){
+  var el  = document.getElementById('saveStatus');
+  var ico = document.getElementById('saveIcon');
+  var txt = document.getElementById('saveText');
+  if(!el) return;
+  ico.style.background = ok ? 'var(--green)' : 'var(--red)';
+  txt.textContent = isAr ? (ok?'تم الحفظ':'فشل الحفظ') : (ok?'Saved':'Save failed');
+  el.style.opacity = '1';
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(function(){ el.style.opacity='0'; }, ok?2000:5000);
+}
+
+function scheduleSave(){
+  pendingSave = true;
+  var el  = document.getElementById('saveStatus');
+  var ico = document.getElementById('saveIcon');
+  var txt = document.getElementById('saveText');
+  if(el){ ico.style.background='var(--amber)'; txt.textContent=isAr?'جاري الحفظ...':'Saving...'; el.style.opacity='1'; }
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveState, 1200);
+}
+
+// Hook all data changes into scheduleSave
+var _origRender = render;
+render = function(){
+  _origRender();
+  scheduleSave();
+};
+var _origHandleMix = handleMixInput;
+handleMixInput = function(el){
+  _origHandleMix(el);
+  scheduleSave();
+};
+var _origHandlePct = handlePctInput;
+handlePctInput = function(f,el){
+  _origHandlePct(f,el);
+  scheduleSave();
+};
+var _origHandleInv = handleInvInput;
+handleInvInput = function(el){
+  _origHandleInv(el);
+  scheduleSave();
+};
+
+// Warn if leaving with unsaved changes
+window.addEventListener('beforeunload', function(e){
+  if(pendingSave){
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+
+// Online/offline indicator
+window.addEventListener('offline', function(){
+  var el=document.getElementById('saveStatus');
+  var ico=document.getElementById('saveIcon');
+  var txt=document.getElementById('saveText');
+  if(el){ico.style.background='var(--red)';txt.textContent=isAr?'لا يوجد اتصال — البيانات غير محفوظة':'Offline — changes not saved';el.style.opacity='1';}
+});
+window.addEventListener('online', function(){
+  saveState();
+});
+
+// Load on start
+loadAllState();
+applyLang();
+render();
+
+/* ── LOANS ── */
+var loans = [];
+var loanIdCounter = 0;
+
+var LT = {
+  en:{
+    sectionTitle:'Long-term loans',
+    addLabel:'Add loan',
+    headers:['Principal','Interest','Total loan','Paid','Remaining','% remaining'],
+    totalLabel:'Total',
+    placeholder:'0'
+  },
+  ar:{
+    sectionTitle:'القروض طويلة الأجل',
+    addLabel:'إضافة قرض',
+    headers:['أصل القرض','الفائدة','إجمالي القرض','المسدد','المتبقي','% المتبقي'],
+    totalLabel:'المجموع',
+    placeholder:'0'
+  }
+};
+
+function lLang(){ return isAr ? LT.ar : LT.en; }
+
+function applyLoansLang(){
+  var t = lLang();
+  var el;
+  el=document.getElementById('loansSectionTitle'); if(el) el.textContent=t.sectionTitle;
+  el=document.getElementById('addLoanLabel');      if(el) el.textContent=t.addLabel;
+  var lthIds=['lth0','lth1','lth2','lth3','lth4','lth5'];
+  for(var i=0;i<lthIds.length;i++){
+    el=document.getElementById(lthIds[i]); if(el) el.textContent=t.headers[i];
+  }
+}
+
+function addLoanRow(){
+  loans.push({id:loanIdCounter++, principal:0, interest:0, paid:0});
+  renderLoans();
+  scheduleSave();
+}
+
+function removeLoan(id){
+  loans = loans.filter(function(l){return l.id!==id;});
+  renderLoans();
+  scheduleSave();
+}
+
+function handleLoanInput(id, field, el){
+  var raw = el.value.replace(/[^0-9]/g,'');
+  var num = parseInt(raw)||0;
+  // format with commas
+  var pos=el.selectionStart, oldLen=el.value.length;
+  el.value = raw ? num.toLocaleString('en-US') : '';
+  var newLen=el.value.length;
+  try{el.setSelectionRange(pos+(newLen-oldLen),pos+(newLen-oldLen));}catch(e){}
+  for(var i=0;i<loans.length;i++){
+    if(loans[i].id===id){ loans[i][field]=num; break; }
+  }
+  updateLoanTotals();
+  scheduleSave();
+}
+
+function updateLoanTotals(){
+  for(var i=0;i<loans.length;i++){
+    var l = loans[i];
+    var total = l.principal + l.interest;
+    var remaining = total - l.paid;
+    var remPct = total>0 ? Math.round(remaining/total*100) : 0;
+    // update computed cells
+    var te=document.getElementById('lt-total-'+l.id);    if(te) te.textContent = total>0?'SAR '+total.toLocaleString('en-US'):'—';
+    var re=document.getElementById('lt-rem-'+l.id);      if(re){ re.textContent = remaining!==0?'SAR '+Math.abs(remaining).toLocaleString('en-US'):'—'; re.style.color=remaining<0?'var(--red)':remaining===0?'var(--text2)':'var(--text)';}
+    var rp=document.getElementById('lt-rempct-'+l.id);
+    if(rp){
+      rp.textContent = total>0?remPct+'%':'—';
+      var barEl=document.getElementById('lt-bar-'+l.id);
+      if(barEl) barEl.style.width=Math.min(100,Math.max(0,remPct))+'%';
+    }
+  }
+  renderLoanTotals();
+}
+
+function renderLoanTotals(){
+  var t = lLang();
+  var totPrincipal=0, totInterest=0, totTotal=0, totPaid=0, totRem=0;
+  for(var i=0;i<loans.length;i++){
+    var l=loans[i];
+    totPrincipal+=l.principal; totInterest+=l.interest;
+    totTotal+=(l.principal+l.interest); totPaid+=l.paid;
+    totRem+=(l.principal+l.interest-l.paid);
+  }
+  var foot=document.getElementById('loansFoot');
+  if(!foot) return;
+  if(loans.length===0){foot.innerHTML='';return;}
+  var totRemPct = totTotal>0?Math.round(totRem/totTotal*100):0;
+  foot.innerHTML='<tr>'
+    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;text-align:center;">SAR '+totPrincipal.toLocaleString('en-US')+'</td>'
+    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;text-align:center;">SAR '+totInterest.toLocaleString('en-US')+'</td>'
+    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;text-align:center;">SAR '+totTotal.toLocaleString('en-US')+'</td>'
+    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;text-align:center;">SAR '+totPaid.toLocaleString('en-US')+'</td>'
+    +'<td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;text-align:center;color:'+(totRem<0?'var(--red)':'var(--text)')+';">SAR '+Math.abs(totRem).toLocaleString('en-US')+'</td>'
+    +'<td style="text-align:center;">'
+      +'<div style="display:flex;align-items:center;justify-content:center;gap:6px;">'
+        +'<div style="width:50px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;"><div style="height:100%;background:var(--red);border-radius:2px;width:'+Math.min(100,totRemPct)+'%;"></div></div>'
+        +'<span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--text2);">'+totRemPct+'%</span>'
+      +'</div>'
+    +'</td>'
+    +'<td></td>'
+    +'</tr>';
+}
+
+function renderLoans(){
+  var t = lLang();
+  var body=document.getElementById('loansBody');
+  if(!body) return;
+  if(loans.length===0){
+    body.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text3);font-size:12px;padding:20px;font-family:var(--font-main);">'+(isAr?'لا توجد قروض. اضغط إضافة قرض للبدء.':'No loans yet. Click Add loan to begin.')+'</td></tr>';
+    renderLoanTotals();
+    return;
+  }
+  var html='';
+  for(var i=0;i<loans.length;i++){
+    var l=loans[i];
+    var total=l.principal+l.interest;
+    var rem=total-l.paid;
+    var remPct=total>0?Math.round(rem/total*100):0;
+    var principalVal=l.principal?l.principal.toLocaleString('en-US'):'';
+    var interestVal=l.interest?l.interest.toLocaleString('en-US'):'';
+    var paidVal=l.paid?l.paid.toLocaleString('en-US'):'';
+    html+='<tr>'
+      +'<td><input class="actual-in" type="text" inputmode="numeric" value="'+principalVal+'" placeholder="'+t.placeholder+'" oninput="handleLoanInput('+l.id+',\'principal\',this)" style="width:110px;" /></td>'
+      +'<td><input class="actual-in" type="text" inputmode="numeric" value="'+interestVal+'" placeholder="'+t.placeholder+'" oninput="handleLoanInput('+l.id+',\'interest\',this)" style="width:110px;" /></td>'
+      +'<td id="lt-total-'+l.id+'" style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--text2);">'+(total>0?'SAR '+total.toLocaleString('en-US'):'—')+'</td>'
+      +'<td><input class="actual-in" type="text" inputmode="numeric" value="'+paidVal+'" placeholder="'+t.placeholder+'" oninput="handleLoanInput('+l.id+',\'paid\',this)" style="width:110px;" /></td>'
+      +'<td id="lt-rem-'+l.id+'" style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;">'+(rem!==0?'SAR '+Math.abs(rem).toLocaleString('en-US'):'—')+'</td>'
+      +'<td id="lt-rempct-'+l.id+'">'
+        +'<div style="display:flex;align-items:center;justify-content:center;gap:6px;">'
+          +'<div style="width:50px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;"><div id="lt-bar-'+l.id+'" style="height:100%;background:var(--red);border-radius:2px;transition:width 0.3s;width:'+Math.min(100,remPct)+'%;"></div></div>'
+          +'<span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--text2);">'+(total>0?remPct+'%':'—')+'</span>'
+        +'</div>'
+      +'</td>'
+      +'<td><button onclick="removeLoan('+l.id+')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px 6px;" title="Remove">✕</button></td>'
+      +'</tr>';
+  }
+  body.innerHTML=html;
+  renderLoanTotals();
+}
+
+// extend getState and loadState for loans
+var _origGetState = getState;
+getState = function(){
+  var s = _origGetState();
+  s.loans = loans;
+  s.loanIdCounter = loanIdCounter;
+  return s;
+};
+
+// Init loans after all definitions
+applyLoansLang();
+renderLoans();
+
+/* ── INSIGHTS ── */
+var insights = [];
+var insightIdCounter = 0;
+
+var IT = {
+  en:{ title:'Insights & recommendations', placeholder:'Write your insight here...', addHint:'Add point' },
+  ar:{ title:'التوجهات والتوصيات',        placeholder:'اكتب توصيتك هنا...',         addHint:'إضافة نقطة' }
+};
+
+function applyInsightsLang(){
+  var t = isAr ? IT.ar : IT.en;
+  var el = document.getElementById('insightsTitle');
+  if(el) el.textContent = t.title;
+}
+
+function addInsight(){
+  insights.push({id: insightIdCounter++, text:''});
+  renderInsights();
+  // focus the new textarea
+  setTimeout(function(){
+    var ta = document.getElementById('ins-ta-'+(insightIdCounter-1));
+    if(ta) ta.focus();
+  }, 50);
+  scheduleSave();
+}
+
+function removeInsight(id){
+  insights = insights.filter(function(x){return x.id!==id;});
+  renderInsights();
+  scheduleSave();
+}
+
+function handleInsightInput(id, el){
+  for(var i=0;i<insights.length;i++){
+    if(insights[i].id===id){ insights[i].text=el.value; break; }
+  }
+  autoResizeTextarea(el);
+  scheduleSave();
+}
+
+function autoResizeTextarea(el){
+  // fixed single-line height — no resize needed
+}
+
+function renderInsights(){
+  var t = isAr ? IT.ar : IT.en;
+  var list = document.getElementById('insightsList');
+  if(!list) return;
+  if(insights.length===0){
+    list.innerHTML='<div style="font-size:12px;color:var(--text3);font-family:var(--font-main);padding:4px 0;">'
+      +(isAr?'لا توجد توصيات. اضغط + للإضافة.':'No insights yet. Click + to add.')+'</div>';
+    return;
+  }
+  var html='';
+  for(var i=0;i<insights.length;i++){
+    var ins=insights[i];
+    html+='<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;">'
+      +'<span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--blue);font-weight:600;min-width:16px;margin-top:8px;">'+(i+1)+'.</span>'
+      +'<textarea id="ins-ta-'+ins.id+'" data-id="'+ins.id+'"'
+        +' oninput="handleInsightInput('+ins.id+',this)"'
+        +' placeholder="'+t.placeholder+'"'
+        +' style="flex:1;background:var(--surface2);border:0.5px solid var(--border);border-radius:6px;color:var(--text);'
+          +'font-family:var(--font-main);font-size:13px;padding:0 8px;outline:none;resize:none;'
+          +'height:30px;line-height:30px;transition:border-color 0.2s;overflow:hidden;vertical-align:middle;"'
+        +' onfocus="this.style.borderColor=\'var(--blue)\'" onblur="this.style.borderColor=\'var(--border)\'"'
+        +'>'+ins.text+'</textarea>'
+      +'<button onclick="removeInsight('+ins.id+')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:12px;padding:6px 2px;margin-top:2px;">✕</button>'
+      +'</div>';
+  }
+  list.innerHTML=html;
+  // auto-resize all textareas
+  for(var i=0;i<insights.length;i++){
+    var ta=document.getElementById('ins-ta-'+insights[i].id);
+    if(ta) autoResizeTextarea(ta);
+  }
+}
+
+// extend state for insights
+var _origGetState2 = getState;
+getState = function(){
+  var s=_origGetState2();
+  s.insights=insights; s.insightIdCounter=insightIdCounter;
+  return s;
+};
+
+applyInsightsLang();
+renderInsights();
+
+/* ── QUICK LIQUIDITY ── */
+var liqLimit  = 0;
+var liqActual = 0;
+
+var QL = {
+  en:{
+    sectionTitle:'Quick liquidity limit — banks',
+    limitLabel:'Liquidity limit',    limitDesc:'Minimum required cash threshold',
+    actualLabel:'Actual liquidity',  actualDesc:'Current cash held in banks',
+    resultLabel:'Investable liquidity', resultDesc:'Actual liquidity − limit',
+    surplus:'', deficit:''
+  },
+  ar:{
+    sectionTitle:'حد السيولة السريعة بالبنوك',
+    limitLabel:'حد السيولة',         limitDesc:'الحد الأدنى المطلوب من النقد',
+    actualLabel:'السيولة الفعلية',   actualDesc:'النقد الفعلي المتوفر بالبنوك',
+    resultLabel:'السيولة القابلة للاستثمار', resultDesc:'السيولة الفعلية − حد السيولة',
+    surplus:'', deficit:''
+  }
+};
+
+function applyLiqLang(){
+  var t = isAr ? QL.ar : QL.en;
+  var ids={liqSectionTitle:t.sectionTitle,liqLimitLabel:t.limitLabel,liqLimitDesc:t.limitDesc,
+           liqActualLabel:t.actualLabel,liqActualDesc:t.actualDesc,
+           liqResultLabel:t.resultLabel,liqResultDesc:t.resultDesc};
+  for(var k in ids){var el=document.getElementById(k);if(el)el.textContent=ids[k];}
+}
+
+function handleLiqInput(el, field){
+  var raw = el.value.replace(/[^0-9]/g,'');
+  var num = parseInt(raw)||0;
+  var pos=el.selectionStart, oldLen=el.value.length;
+  el.value = raw ? num.toLocaleString('en-US') : '';
+  var newLen=el.value.length;
+  try{el.setSelectionRange(pos+(newLen-oldLen),pos+(newLen-oldLen));}catch(e){}
+  if(field==='limit')  liqLimit  = num;
+  if(field==='actual') liqActual = num;
+  updateLiq();
+  scheduleSave();
+}
+
+function updateLiq(){
+  var t = isAr ? QL.ar : QL.en;
+  var diff = liqActual - liqLimit;
+  var pct  = liqLimit>0 ? Math.round(Math.abs(diff)/liqLimit*100) : 0;
+  var val  = document.getElementById('liqResultValue');
+  var pctEl= document.getElementById('liqResultPct');
+  if(!val) return;
+  if(liqLimit===0 && liqActual===0){
+    val.textContent='—'; val.style.color='var(--text2)';
+    if(pctEl) pctEl.textContent='';
+    return;
+  }
+  var absStr = 'SAR '+Math.abs(diff).toLocaleString('en-US');
+  val.textContent = diff<0 ? '('+absStr+')' : absStr;
+  val.style.color = diff>=0 ? 'var(--green)' : 'var(--red)';
+  if(pctEl){ pctEl.textContent=''; }
+  var desc=document.getElementById('liqResultDesc');
+  if(desc){
+    if(liqLimit===0 && liqActual===0){
+      desc.textContent = isAr ? 'السيولة الفعلية − حد السيولة' : 'Actual liquidity − limit';
+      desc.style.color='var(--text3)';
+    } else if(diff>=0){
+      desc.textContent = isAr ? 'لابد من استثمار هذا الفائض' : 'This surplus must be invested';
+      desc.style.color='var(--green)';
+    } else {
+      desc.textContent = isAr ? 'يجب خفض التدفقات النقدية الصادرة' : 'Outgoing cash flows must be reduced';
+      desc.style.color='var(--red)';
+    }
+  }
+}
+
+// extend state for liquidity
+var _origGetState3 = getState;
+getState = function(){
+  var s=_origGetState3();
+  s.liqLimit=liqLimit; s.liqActual=liqActual;
+  return s;
+};
+
+applyLiqLang();
+updateLiq();
+
+/* ── INVESTMENT TARGET ── */
+var invTgt = { target:0, struct1:0, struct2:0, struct3:0, struct4:0, struct5:0, actual:0 };
+
+var ITV = {
+  en:{
+    sectionTitle:'Target investment',
+    targetLabel:'Target amount',    targetDesc:'Planned investment amount',
+    struct1ph:'Investment type 1',  struct2ph:'Investment type 2',
+    actualLabel:'Actual investment',actualDesc:'Year-to-date',
+    balLabel:'Target balance',      balDesc:'Target − actual investment'
+  },
+  ar:{
+    sectionTitle:'الاستثمار المستهدف',
+    targetLabel:'المبلغ المستهدف',  targetDesc:'مبلغ الاستثمار المخطط',
+    struct1ph:'نوع الاستثمار 1',   struct2ph:'نوع الاستثمار 2',
+    actualLabel:'الاستثمار الفعلي',actualDesc:'منذ بداية العام',
+    balLabel:'رصيد المستهدف',      balDesc:'المستهدف − الاستثمار الفعلي'
+  }
+};
+
+function applyInvTgtLang(){
+  var t = isAr ? ITV.ar : ITV.en;
+  var ids={invTgtSectionTitle:t.sectionTitle,invTgtLabel:t.targetLabel,invTgtDesc:t.targetDesc,
+           invActualLabel:t.actualLabel,invActualDesc:t.actualDesc,
+           invBalLabel:t.balLabel,invBalDesc:t.balDesc};
+  for(var k in ids){var el=document.getElementById(k);if(el)el.textContent=ids[k];}
+  var structPh = isAr
+    ? ['نوع الاستثمار 1','نوع الاستثمار 2','نوع الاستثمار 3','نوع الاستثمار 4','نوع الاستثمار 5']
+    : ['Investment type 1','Investment type 2','Investment type 3','Investment type 4','Investment type 5'];
+  for(var i=1;i<=5;i++){
+    var lbl=document.getElementById('invStruct'+i+'Label');
+    if(lbl && !lbl.value) lbl.placeholder=structPh[i-1];
+    else if(lbl) lbl.placeholder=structPh[i-1];
+  }
+}
+
+function handleInvTgtInput(el, field){
+  var raw = el.value.replace(/[^0-9]/g,'');
+  var num = parseInt(raw)||0;
+  var pos=el.selectionStart, oldLen=el.value.length;
+  el.value = raw ? num.toLocaleString('en-US') : '';
+  var newLen=el.value.length;
+  try{el.setSelectionRange(pos+(newLen-oldLen),pos+(newLen-oldLen));}catch(e){}
+  invTgt[field] = num;
+  updateInvTgt();
+  scheduleSave();
+}
+
+function updateInvTgt(){
+  var bal = invTgt.target - invTgt.actual;
+  var bv  = document.getElementById('invBalValue');
+  if(!bv) return;
+  if(invTgt.target===0 && invTgt.actual===0){ bv.textContent='—'; bv.style.color='var(--text2)'; return; }
+  bv.textContent = bal<0 ? 'SAR ('+Math.abs(bal).toLocaleString('en-US')+')' : 'SAR '+bal.toLocaleString('en-US');
+  bv.style.color = bal>=0 ? 'var(--green)' : 'var(--red)';
+}
+
+// extend state
+var _origGetState4 = getState;
+getState = function(){
+  var s=_origGetState4();
+  s.invTgt=invTgt;
+  s.invStruct1Label = document.getElementById('invStruct1Label')?document.getElementById('invStruct1Label').value:'';
+  s.invStruct2Label = document.getElementById('invStruct2Label')?document.getElementById('invStruct2Label').value:'';
+  s.invStruct3Label = document.getElementById('invStruct3Label')?document.getElementById('invStruct3Label').value:'';
+  s.invStruct4Label = document.getElementById('invStruct4Label')?document.getElementById('invStruct4Label').value:'';
+  s.invStruct5Label = document.getElementById('invStruct5Label')?document.getElementById('invStruct5Label').value:'';
+  return s;
+};
+
+applyInvTgtLang();
+updateInvTgt();
+
+/* ── REQUIRED FINANCING ── */
+var finLt = 0; // long-term financing (editable)
+
+var FIN = {
+  en:{
+    sectionTitle:'Required financing',
+    finReqLabel:'Required financing', finReqDesc:'Target balance − investable liquidity', finReqNote:'auto-calculated',
+    finLtLabel:'Long-term financing',  finLtDesc:'Enter amount → working capital auto-adjusts',
+    finWcLabel:'Working capital financing', finWcDesc:'Required financing − long-term'
+  },
+  ar:{
+    sectionTitle:'التمويل المطلوب',
+    finReqLabel:'التمويل المطلوب',    finReqDesc:'رصيد المستهدف − السيولة القابلة للاستثمار', finReqNote:'محسوب تلقائياً',
+    finLtLabel:'تمويل طويل الأجل',   finLtDesc:'أدخل المبلغ ← رأس المال العامل يتكيف تلقائياً',
+    finWcLabel:'تمويل رأس المال العامل', finWcDesc:'التمويل المطلوب − طويل الأجل'
+  }
+};
+
+function applyFinLang(){
+  var t = isAr ? FIN.ar : FIN.en;
+  var ids={finReqSectionTitle:t.sectionTitle,finReqLabel:t.finReqLabel,finReqDesc:t.finReqDesc,
+           finReqNote:t.finReqNote,finLtLabel:t.finLtLabel,finLtDesc:t.finLtDesc,
+           finWcLabel:t.finWcLabel,finWcDesc:t.finWcDesc};
+  for(var k in ids){var el=document.getElementById(k);if(el)el.textContent=ids[k];}
+}
+
+function getRequiredFinancing(){
+  // invBal = invTgt.target - invTgt.actual
+  var invBal = invTgt.target - invTgt.actual;
+  // investable liq = liqActual - liqLimit
+  var investableLiq = liqActual - liqLimit;
+  return invBal - investableLiq;
+}
+
+function handleFinInput(el, field){
+  var raw = el.value.replace(/[^0-9]/g,'');
+  var num = parseInt(raw)||0;
+  var pos=el.selectionStart, oldLen=el.value.length;
+  el.value = raw ? num.toLocaleString('en-US') : '';
+  var newLen=el.value.length;
+  try{el.setSelectionRange(pos+(newLen-oldLen),pos+(newLen-oldLen));}catch(e){}
+  if(field==='lt') finLt = num;
+  updateFinancing();
+  scheduleSave();
+}
+
+function updateFinancing(){
+  var req = getRequiredFinancing();
+  var wc  = req - finLt;
+
+  var rv = document.getElementById('finReqValue');
+  if(rv){
+    rv.textContent = (invTgt.target===0&&liqLimit===0&&liqActual===0&&invTgt.actual===0)
+      ? '—'
+      : (req<0 ? 'SAR ('+Math.abs(Math.round(req)).toLocaleString('en-US')+')' : 'SAR '+Math.round(req).toLocaleString('en-US'));
+    rv.style.color = req<0?'var(--green)':req===0?'var(--text2)':'var(--text)';
+  }
+
+  var wcv = document.getElementById('finWcValue');
+  if(wcv){
+    wcv.textContent = finLt===0&&req===0 ? '—' : 'SAR '+Math.round(wc).toLocaleString('en-US');
+    wcv.style.color = wc<0?'var(--red)':wc===0?'var(--green)':'var(--text2)';
+  }
+}
+
+// hook into liq and invTgt updates to recalc financing
+var _origUpdateLiq = updateLiq;
+updateLiq = function(){
+  _origUpdateLiq();
+  updateFinancing();
+};
+var _origUpdateInvTgt = updateInvTgt;
+updateInvTgt = function(){
+  _origUpdateInvTgt();
+  updateFinancing();
+};
+
+// extend state
+var _origGetState5 = getState;
+getState = function(){ var s=_origGetState5(); s.finLt=finLt; return s; };
+
+/* ── UNIFIED LOAD ── */
+function loadAllState(){
+  try{
+    var raw=localStorage.getItem('rv_dashboard');
+    if(!raw) return;
+    var s=JSON.parse(raw);
+
+    // core
+    if(s.totalRev) document.getElementById('totalRev').value=s.totalRev;
+    if(s.actual)  for(var i=0;i<s.actual.length;i++) actual[i]=s.actual[i];
+    if(s.opps)    for(var i=0;i<s.opps.length;i++)   opps[i]=s.opps[i];
+    if(s.mixPct)  for(var i=0;i<s.mixPct.length;i++) mixPct[i]=s.mixPct[i];
+    if(s.gaPct  !== undefined) gaPct  = s.gaPct;
+    if(s.finPct !== undefined) finPct = s.finPct;
+    if(s.invAmt !== undefined) invAmt = s.invAmt;
+    if(s.isAr   !== undefined) isAr   = s.isAr;
+    if(s.gaInput  && document.getElementById('gaInput'))  document.getElementById('gaInput').value  = s.gaInput;
+    if(s.finInput && document.getElementById('finInput')) document.getElementById('finInput').value = s.finInput;
+    if(s.invAmt){ var iv=document.getElementById('invInput'); if(iv) iv.value=s.invAmt.toLocaleString('en-US'); }
+
+    // loans
+    if(s.loans) loans = s.loans;
+    if(s.loanIdCounter !== undefined) loanIdCounter = s.loanIdCounter;
+
+    // insights
+    if(s.insights) insights = s.insights;
+    if(s.insightIdCounter !== undefined) insightIdCounter = s.insightIdCounter;
+
+    // liquidity
+    if(s.liqLimit  !== undefined) liqLimit  = s.liqLimit;
+    if(s.liqActual !== undefined) liqActual = s.liqActual;
+    var li=document.getElementById('liqLimitInput');  if(li&&liqLimit)  li.value=liqLimit.toLocaleString('en-US');
+    var la=document.getElementById('liqActualInput'); if(la&&liqActual) la.value=liqActual.toLocaleString('en-US');
+
+    // investment target
+    if(s.invTgt) invTgt = s.invTgt;
+    var invInputMap={invTgtInput:'target',invStruct1Input:'struct1',invStruct2Input:'struct2',invStruct3Input:'struct3',invStruct4Input:'struct4',invStruct5Input:'struct5',invActualInput:'actual'};
+    for(var id in invInputMap){ var iel=document.getElementById(id); if(iel&&invTgt[invInputMap[id]]) iel.value=invTgt[invInputMap[id]].toLocaleString('en-US'); }
+    var structLabels=['invStruct1Label','invStruct2Label','invStruct3Label','invStruct4Label','invStruct5Label'];
+    var structKeys  =['invStruct1Label','invStruct2Label','invStruct3Label','invStruct4Label','invStruct5Label'];
+    for(var j=0;j<structLabels.length;j++){ var sel=document.getElementById(structLabels[j]); if(sel&&s[structKeys[j]]) sel.value=s[structKeys[j]]; }
+
+    // financing
+    if(s.finLt !== undefined){ finLt = s.finLt; var fl=document.getElementById('finLtInput'); if(fl&&finLt) fl.value=finLt.toLocaleString('en-US'); }
+
+  }catch(e){ console.error('loadAllState error',e); }
+}
+
+applyFinLang();
+updateFinancing();
+
+</script>
+</body>
+</html>
