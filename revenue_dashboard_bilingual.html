@@ -441,6 +441,25 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
 
 <div class="footer" id="footerText">Revenue Tracker · Built for Saudi market context · All values in SAR</div>
 
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+  const firebaseConfig = {
+    databaseURL: 'https://wow-dashboard-7fb29-default-rtdb.firebaseio.com/'
+  };
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+  const dbRef = ref(db, 'dashboard/state');
+
+  // Expose to global scope
+  window._fbSet = function(data){ set(dbRef, data); };
+  window._fbListen = function(cb){ onValue(dbRef, snap=>{ if(snap.exists()) cb(snap.val()); }); };
+  window._fbReady = true;
+  document.dispatchEvent(new Event('firebase-ready'));
+</script>
+
 <script>
 var SEG = [
   {id:'A',margin:'4%', profitPct:0.04, color:'#3d8ef0'},
@@ -847,7 +866,9 @@ function getState(){
 
 function saveState(){
   try {
-    localStorage.setItem('rv_dashboard', JSON.stringify(getState()));
+    var data = getState();
+    if(window._fbSet) window._fbSet(data);
+    localStorage.setItem('rv_dashboard', JSON.stringify(data));
     showSaveStatus(true);
     pendingSave = false;
   } catch(e) {
@@ -1483,23 +1504,87 @@ function handleBalInput(key, el){
 }
 
 /* ── FINAL INIT — after ALL variables and functions defined ── */
-loadAllState();        // restore all saved data
-applyLang();           // apply language
-render();              // render main table + KPIs
-restoreInputValues();  // restore actual/opp/mix inputs
-applyLoansLang();      renderLoans();
-applyInsightsLang();   renderInsights();
-applyLiqLang();        updateLiq();
-applyInvTgtLang();     updateInvTgt();
-applyFinLang();        updateFinancing();
-applyBalLang();
-// restore GA/Fin inputs
-(function(){
-  var s; try{ s=JSON.parse(localStorage.getItem('rv_dashboard')||'{}'); }catch(e){ s={}; }
+
+function applyStateAndRender(s){
+  if(!s) return;
+  // core
+  if(s.totalRev) document.getElementById('totalRev').value=s.totalRev;
+  if(s.actual)  for(var i=0;i<s.actual.length;i++) actual[i]=s.actual[i];
+  if(s.opps)    for(var i=0;i<s.opps.length;i++)   opps[i]=s.opps[i];
+  if(s.mixPct)  for(var i=0;i<s.mixPct.length;i++) mixPct[i]=s.mixPct[i];
+  if(s.gaPct  !== undefined) gaPct  = s.gaPct;
+  if(s.finPct !== undefined) finPct = s.finPct;
+  if(s.invAmt !== undefined) invAmt = s.invAmt;
+  if(s.isAr   !== undefined) isAr   = s.isAr;
   if(s.gaInput  && document.getElementById('gaInput'))  document.getElementById('gaInput').value  = s.gaInput;
   if(s.finInput && document.getElementById('finInput')) document.getElementById('finInput').value = s.finInput;
-  if(s.invAmt){ var iv=document.getElementById('invInput'); if(iv){ iv.value=s.invAmt.toLocaleString?s.invAmt.toLocaleString('en-US'):s.invAmt; hideInvInput(); updateRevCost(); } }
-})();
+  if(s.invAmt){ var iv=document.getElementById('invInput'); if(iv) iv.value=s.invAmt.toLocaleString?s.invAmt.toLocaleString('en-US'):s.invAmt; }
+  if(s.loans) loans = s.loans;
+  if(s.loanIdCounter !== undefined) loanIdCounter = s.loanIdCounter;
+  if(s.insights) insights = s.insights;
+  if(s.insightIdCounter !== undefined) insightIdCounter = s.insightIdCounter;
+  if(s.liqLimit  !== undefined) liqLimit  = s.liqLimit;
+  if(s.liqActual !== undefined) liqActual = s.liqActual;
+  var li=document.getElementById('liqLimitInput');  if(li&&liqLimit)  li.value=liqLimit.toLocaleString('en-US');
+  var la=document.getElementById('liqActualInput'); if(la&&liqActual) la.value=liqActual.toLocaleString('en-US');
+  if(s.invTgt) invTgt = s.invTgt;
+  var invInputMap={invTgtInput:'target',invStruct1Input:'struct1',invStruct2Input:'struct2',invStruct3Input:'struct3',invStruct4Input:'struct4',invStruct5Input:'struct5',invActualInput:'actual'};
+  for(var id in invInputMap){ var iel=document.getElementById(id); if(iel&&invTgt[invInputMap[id]]) iel.value=invTgt[invInputMap[id]].toLocaleString('en-US'); }
+  var structLabels=['invStruct1Label','invStruct2Label','invStruct3Label','invStruct4Label','invStruct5Label'];
+  for(var j=0;j<structLabels.length;j++){ var sel=document.getElementById(structLabels[j]); if(sel&&s[structLabels[j]]) sel.value=s[structLabels[j]]; }
+  if(s.finLt !== undefined){ finLt = s.finLt; var fl=document.getElementById('finLtInput'); if(fl&&finLt) fl.value=finLt.toLocaleString('en-US'); }
+  if(s.balances){ balances=s.balances; ['balAR','balAP','balPO','balBG'].forEach(function(k){ var bel=document.getElementById(k); if(bel&&balances[k]) bel.value=balances[k].toLocaleString('en-US'); }); }
+  // re-render everything
+  tableBuilt=false;
+  applyLang(); render(); restoreInputValues();
+  applyLoansLang(); renderLoans();
+  applyInsightsLang(); renderInsights();
+  applyLiqLang(); updateLiq();
+  applyInvTgtLang(); updateInvTgt();
+  applyFinLang(); updateFinancing();
+  applyBalLang();
+}
+
+// Try Firebase first, fallback to localStorage
+function initDashboard(){
+  if(window._fbListen){
+    // Firebase: listen for real-time updates
+    window._fbListen(function(s){
+      applyStateAndRender(s);
+    });
+  } else {
+    // Fallback: localStorage
+    loadAllState();
+    applyLang(); render(); restoreInputValues();
+    applyLoansLang(); renderLoans();
+    applyInsightsLang(); renderInsights();
+    applyLiqLang(); updateLiq();
+    applyInvTgtLang(); updateInvTgt();
+    applyFinLang(); updateFinancing();
+    applyBalLang();
+  }
+}
+
+// Wait for Firebase module to load
+if(window._fbReady){
+  initDashboard();
+} else {
+  document.addEventListener('firebase-ready', initDashboard);
+  // Fallback if Firebase takes too long
+  setTimeout(function(){
+    if(!window._fbReady){
+      loadAllState();
+      applyLang(); render(); restoreInputValues();
+      applyLoansLang(); renderLoans();
+      applyInsightsLang(); renderInsights();
+      applyLiqLang(); updateLiq();
+      applyInvTgtLang(); updateInvTgt();
+      applyFinLang(); updateFinancing();
+      applyBalLang();
+    }
+  }, 3000);
+}
+
 
 </script>
 </body>
