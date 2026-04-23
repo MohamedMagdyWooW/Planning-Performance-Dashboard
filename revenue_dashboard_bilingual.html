@@ -120,12 +120,16 @@ input.mix-in:focus{border-bottom-color:var(--blue);}
 input.pct-in{background:transparent;border:none;border-bottom:1px dashed var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:1px 4px;width:50px;text-align:center;outline:none;direction:ltr;}
 input.pct-in:focus{border-bottom-color:var(--blue);}
 @media print {
-  @page { size: A4 landscape; margin: 0; }
+  @page { size: A4 landscape; margin: 5mm; }
   html, body { margin: 0; padding: 0; width: 100%; background: #fff !important; }
-  body { transform-origin: top left; }
-  .top-actions, .lang-btn, #saveStatus, button { display: none !important; }
+  .top-actions { display: none !important; }
+  #printBtn, .lang-btn, #saveStatus { display: none !important; }
   .table-wrap { overflow: visible !important; }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { font-size: 11px; }
+  .kpi-grid { grid-template-columns: repeat(4, 1fr) !important; }
+  .kpi-value { font-size: 18px !important; }
+  .kpi-label { font-size: 11px !important; }
 }
 </style>
 </head>
