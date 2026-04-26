@@ -32,16 +32,25 @@ body::before{content:'';display:block;position:fixed;top:0;left:0;right:0;height
 .topbar-left{display:flex;flex-direction:column;gap:6px;}
 .topbar-left h1{font-size:30px;font-weight:700;letter-spacing:-0.02em;color:var(--text);font-family:var(--font-main);}
 .topbar-left p{font-size:15px;color:var(--text2);font-family:var(--font-main);margin-top:4px;}
-.topbar-right{display:flex;align-items:center;gap:10px;background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--radius);padding:10px 14px;flex-wrap:wrap;}
+.topbar-right{display:flex;align-items:flex-start;flex-direction:column;gap:0;background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--radius);padding:10px 14px;width:100%;box-sizing:border-box;}
 .topbar-right label{font-size:12px;color:var(--text2);white-space:nowrap;font-family:var(--font-main);}
 #totalRev{background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:var(--font-mono);font-size:15px;font-weight:500;padding:4px 6px;width:160px;outline:none;transition:border-color 0.2s;direction:ltr;text-align:right;}
 #totalRev:focus{border-bottom-color:var(--blue);}
-.rev-formatted{font-family:var(--font-mono);font-size:13px;color:var(--blue);font-weight:500;}
-.rev-progress-wrap{display:flex;align-items:center;gap:8px;}
-.rev-progress-bar{width:160px;height:5px;background:#d8dde8;border-radius:3px;overflow:hidden;}
+[dir="ltr"] #totalRev{text-align:left;}
+.topbar-right .rev-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;width:100%;}
+[dir="ltr"] .topbar-right .rev-row{flex-direction:row;}
+[dir="rtl"] .topbar-right .rev-row{flex-direction:row-reverse;}
+.topbar-right .pl-value{font-size:14px !important;font-weight:600;white-space:nowrap;font-family:'IBM Plex Mono',monospace;direction:ltr;text-align:right;width:140px;display:inline-block;flex-shrink:0;}
+.topbar-right .pl-net .pl-value{font-size:14px !important;}
+.topbar-right .pl-nums{gap:6px;flex-shrink:0;}
+.topbar-right #apl_revValue{width:140px;display:inline-block;text-align:right;direction:ltr;font-size:14px !important;font-weight:600;font-family:'IBM Plex Mono',monospace;white-space:nowrap;flex-shrink:0;}
+.topbar-right #totalRev{font-size:14px !important;font-weight:600;font-family:'IBM Plex Mono',monospace;}
+.rev-progress-wrap{display:flex;align-items:center;gap:6px;flex-shrink:1;min-width:0;overflow:hidden;}
+.rev-progress-bar{width:80px;min-width:40px;flex-shrink:1;height:5px;background:#d8dde8;border-radius:3px;overflow:hidden;}
 .rev-progress-fill{height:100%;width:0%;background:var(--green);border-radius:3px;transition:width 0.4s ease;}
-.rev-progress-pct{font-family:var(--font-mono);font-size:11px;color:var(--text2);min-width:34px;}
-.rev-progress-lbl{font-size:11px;color:var(--text3);}
+.rev-progress-pct{font-family:var(--font-mono);font-size:11px;color:var(--text2);white-space:nowrap;flex-shrink:0;}
+.rev-progress-lbl{font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0;}
+
 
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:1rem;}
 .kpi{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.5rem;position:relative;overflow:hidden;box-shadow:0 1px 6px rgba(28,34,55,0.07);}
@@ -157,12 +166,12 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
   </div>
 </div>
 
-<div class="topbar" style="align-items:flex-start;">
-  <div class="topbar-left" style="flex:1;min-width:0;">
+<div class="topbar" style="align-items:flex-start;gap:16px;display:grid;grid-template-columns:1fr 360px 360px;">
+
+  <!-- LEFT: Title + Insights (narrower) -->
+  <div class="topbar-left" style="min-width:0;">
     <h1 id="titleMain">لوحة معلومات أداء التخطيط</h1>
     <p id="titleSub">Customer segment performance — expected vs actual</p>
-
-    <!-- Insights card -->
     <div id="insightsCard" style="margin-top:14px;background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--radius);padding:12px 14px;width:100%;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
         <span id="insightsTitle" style="font-size:15px;font-weight:700;color:var(--text);font-family:var(--font-main);">Insights & recommendations</span>
@@ -171,26 +180,22 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
       <div id="insightsList"></div>
     </div>
   </div>
-  <div class="topbar-right" style="align-items:flex-start;min-width:320px;">
-    <div style="display:flex;flex-direction:column;gap:0;width:100%;">
 
-      <!-- Header label -->
-      <label id="revLabel" style="font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;">قائمة الدخل المتوقعة</label>
-
-      <!-- Revenue row -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;">
-        <input type="text" inputmode="numeric" id="totalRev" value="120,000,000" />
+  <!-- MIDDLE: قائمة الدخل المستهدفة (existing) -->
+  <div class="topbar-right" style="align-items:flex-start;flex-direction:column;gap:0;">
+      <label id="revLabel" style="font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;">قائمة الدخل المستهدفة</label>
+      <div class="rev-row" style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;overflow:hidden;">
+        <div style="display:flex;align-items:baseline;gap:0;flex-shrink:0;">
+          <span id="totalRevDisplay" class="pl-value" style="cursor:pointer;border-bottom:1px dashed var(--border2);display:inline-block;" onclick="showTotalRevInput()" title="Click to edit">120,000,000</span>
+          <input type="text" inputmode="numeric" id="totalRev" value="120,000,000" style="display:none;" onblur="hideTotalRevInput(this)" oninput="handleRevInput(this)" />
+        </div>
         <div class="rev-progress-wrap" style="gap:6px;">
           <div class="rev-progress-bar" style="width:100px;"><div class="rev-progress-fill" id="revProgressFill"></div></div>
           <span class="rev-progress-pct" id="revProgressPct">0%</span>
           <span class="rev-progress-lbl" id="revProgressLabel">achieved</span>
         </div>
       </div>
-
-      <!-- P&L lines -->
       <div style="margin-top:10px;display:flex;flex-direction:column;gap:0;">
-
-        <!-- Revenue cost -->
         <div class="pl-row">
           <span id="revCostLabel" class="pl-label">Revenue cost</span>
           <div class="pl-nums">
@@ -198,8 +203,6 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
             <span id="revCostValue" class="pl-value" style="color:var(--red);">—</span>
           </div>
         </div>
-
-        <!-- Gross profit -->
         <div class="pl-row pl-result">
           <span id="revProfitLabel" class="pl-label" style="color:var(--green);">Gross profit</span>
           <div class="pl-nums">
@@ -207,11 +210,7 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
             <span id="revProfitValue" class="pl-value" style="color:var(--green);">—</span>
           </div>
         </div>
-
-        <!-- Divider -->
         <div style="border-top:0.5px solid var(--border);margin:6px 0;"></div>
-
-        <!-- G&A -->
         <div class="pl-row">
           <span id="gaLabel" class="pl-label">G&amp;A expenses</span>
           <div class="pl-nums">
@@ -222,8 +221,6 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
             <span id="gaValue" class="pl-value">—</span>
           </div>
         </div>
-
-        <!-- Finance cost -->
         <div class="pl-row">
           <span id="finLabel" class="pl-label">Finance cost</span>
           <div class="pl-nums">
@@ -234,8 +231,6 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
             <span id="finValue" class="pl-value">—</span>
           </div>
         </div>
-
-        <!-- Investment properties -->
         <div class="pl-row">
           <span id="invLabel" class="pl-label">Investment properties</span>
           <div class="pl-nums">
@@ -246,8 +241,6 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
             </div>
           </div>
         </div>
-
-        <!-- Net profit result -->
         <div class="pl-row pl-result pl-net">
           <span id="netLabel" class="pl-label" style="font-weight:600;">Net profit</span>
           <div class="pl-nums">
@@ -255,10 +248,84 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
             <span id="netValue" class="pl-value" style="font-size:17px;font-weight:600;">—</span>
           </div>
         </div>
-
       </div>
-    </div>
   </div>
+
+  <!-- RIGHT: قائمة الدخل المتوقعة (actual/opp based) -->
+  <div class="topbar-right" style="align-items:flex-start;flex-direction:column;gap:0;">
+      <label id="apl_title" style="font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;">قائمة الدخل المتوقعة</label>
+
+      <!-- Actual+Opp total -->
+      <div class="pl-row" style="padding-bottom:8px;margin-bottom:4px;">
+        <span id="apl_revLabel" class="pl-label">الإيرادات المحققة + الفرص</span>
+        <div class="pl-nums">
+          <span class="pl-pct"></span>
+          <span id="apl_revValue" class="pl-value" style="font-size:15px;font-weight:600;min-width:110px;text-align:right;">—</span>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:0;">
+        <!-- Revenue cost (auto from weighted margin) -->
+        <div class="pl-row">
+          <span id="apl_costLabel" class="pl-label">تكلفة الإيرادات</span>
+          <div class="pl-nums">
+            <span id="apl_costPct" class="pl-pct" style="color:var(--red);"></span>
+            <span id="apl_costValue" class="pl-value" style="color:var(--red);">—</span>
+          </div>
+        </div>
+        <!-- Gross profit (auto) -->
+        <div class="pl-row pl-result">
+          <span id="apl_grossLabel" class="pl-label" style="color:var(--green);">مجمل الربح</span>
+          <div class="pl-nums">
+            <span id="apl_grossPct" class="pl-pct" style="color:var(--green);"></span>
+            <span id="apl_grossValue" class="pl-value" style="color:var(--green);">—</span>
+          </div>
+        </div>
+        <div style="border-top:0.5px solid var(--border);margin:6px 0;"></div>
+        <!-- G&A (manual %) -->
+        <div class="pl-row">
+          <span id="apl_gaLabel" class="pl-label">المصاريف العمومية والإدارية</span>
+          <div class="pl-nums">
+            <div style="display:flex;align-items:center;gap:3px;min-width:36px;justify-content:flex-end;">
+              <input id="apl_gaInput" type="text" class="pct-in" placeholder="0" oninput="updateApl()" style="width:32px;" />
+              <span class="pl-pct-sign">%</span>
+            </div>
+            <span id="apl_gaValue" class="pl-value">—</span>
+          </div>
+        </div>
+        <!-- Finance cost (manual %) -->
+        <div class="pl-row">
+          <span id="apl_finLabel" class="pl-label">تكلفة التمويل</span>
+          <div class="pl-nums">
+            <div style="display:flex;align-items:center;gap:3px;min-width:36px;justify-content:flex-end;">
+              <input id="apl_finInput" type="text" class="pct-in" placeholder="0" oninput="updateApl()" style="width:32px;" />
+              <span class="pl-pct-sign">%</span>
+            </div>
+            <span id="apl_finValue" class="pl-value">—</span>
+          </div>
+        </div>
+        <!-- Investment properties (manual) -->
+        <div class="pl-row">
+          <span id="apl_invLabel" class="pl-label">أرباح تقييم عقارات استثمارية</span>
+          <div class="pl-nums">
+            <span id="apl_invEdit" onclick="showAplInvInput()" style="font-size:10px;color:var(--text3);cursor:pointer;font-family:var(--font-main);border-bottom:1px dashed var(--border2);padding-bottom:1px;min-width:36px;text-align:right;display:inline-block;">edit</span>
+            <div style="display:flex;align-items:baseline;gap:6px;min-width:110px;justify-content:flex-end;">
+              <span id="apl_invValue" class="pl-value" style="color:var(--text2);">—</span>
+              <input id="apl_invInput" type="text" class="pct-in" style="width:100px;text-align:right;display:none;" placeholder="0" oninput="updateApl()" onblur="hideAplInvInput()" />
+            </div>
+          </div>
+        </div>
+        <!-- Net profit (auto) -->
+        <div class="pl-row pl-result pl-net">
+          <span id="apl_netLabel" class="pl-label" style="font-weight:600;">صافي الربح</span>
+          <div class="pl-nums">
+            <span id="apl_netPct" class="pl-pct"></span>
+            <span id="apl_netValue" class="pl-value" style="font-size:17px;font-weight:600;">—</span>
+          </div>
+        </div>
+      </div>
+  </div>
+
 </div>
 
 <div class="kpi-grid" id="kpiGrid"></div>
@@ -514,7 +581,7 @@ var T = {
   },
   ar:{
     title:'لوحة معلومات أداء التخطيط', sub:'أداء شرائح العملاء — المتوقع مقابل الفعلي',
-    revLabel:'قائمة الدخل المتوقعة', sectionTitle:'هيكل تخطيط المبيعات',
+    revLabel:'قائمة الدخل المستهدفة', sectionTitle:'هيكل تخطيط المبيعات',
     th:['الشريحة','هامش الربح','مزيج المبيعات','الإيراد المتوقع','الإيرادات المحققة','الفرق','التقدم','الفرص'],
     kpiLabels:['إجمالي المتوقع','إجمالي المحقق','الفرق المتبقي','الشرائح النشطة'],
     kpiSubs:function(p,r){return['100% من الهدف',p+'% من الهدف',r+'% متبقي','شرائح بها بيانات'];},
@@ -724,10 +791,10 @@ function renderKPIs(totalConsumed,totalOpp,totalExpected,totalGap,overallPct,val
   var remPct = 100-overallPct;
   var subs = t.kpiSubs(overallPct,remPct);
   var kpis = [
-    {label:t.kpiLabels[0],value:fmtSAR(totalExpected), sub:subs[0],cls:'blue', valCls:'', icon:'📊'},
-    {label:t.kpiLabels[1],value:fmtSAR(totalAchieved), sub:subs[1],cls:'green',valCls:totalAchieved>0?'positive':'', icon:'✅'},
-    {label:t.kpiLabels[2],value:fmtSAR(totalGap),      sub:subs[2],cls:totalGap<0?'amber':'gray',valCls:totalGap<0?'negative':'', icon:'⏳'},
-    {label:t.kpiLabels[3],value:vals.filter(function(v){return v.consumed>0||v.opp>0;}).length+' / 5',sub:subs[3],cls:'gray',valCls:'', icon:'🏷️'}
+    {label:t.kpiLabels[0],value:fmtSAR(totalExpected), sub:subs[0],cls:'blue', valCls:'', icon:0, pct:null},
+    {label:t.kpiLabels[1],value:fmtSAR(totalAchieved), sub:subs[1],cls:'green',valCls:totalAchieved>0?'positive':'', icon:1, pct:overallPct, pctLabel:isAr?overallPct+'% محقق':overallPct+'% achieved', barColor:'var(--green)'},
+    {label:t.kpiLabels[2],value:fmtSAR(totalGap),      sub:subs[2],cls:totalGap<0?'amber':'gray',valCls:totalGap<0?'negative':'', icon:2, pct:(100-overallPct), pctLabel:isAr?(100-overallPct)+'% متبقي':(100-overallPct)+'% remaining', barColor:'var(--amber)'},
+    {label:t.kpiLabels[3],value:vals.filter(function(v){return v.consumed>0||v.opp>0;}).length+' / 5',sub:subs[3],cls:'gray',valCls:'', icon:3, pct:null}
   ];
   var icons = [
     '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="9" width="3" height="6" rx="1" fill="currentColor" opacity="0.9"/><rect x="6" y="5" width="3" height="10" rx="1" fill="currentColor" opacity="0.9"/><rect x="11" y="1" width="3" height="14" rx="1" fill="currentColor" opacity="0.9"/></svg>',
@@ -746,13 +813,25 @@ function renderKPIs(totalConsumed,totalOpp,totalExpected,totalGap,overallPct,val
       valHtml='<div class="kpi-value '+k.valCls+'">'+k.value+'</div>';
     }
     var iconHtml='<div style="width:34px;height:34px;border-radius:50%;background:'+iconColors[i]+'1a;display:flex;align-items:center;justify-content:center;color:'+iconColors[i]+';flex-shrink:0;">'+icons[i]+'</div>';
+    var progressHtml = '';
+    if(k.pct !== null){
+      var fill = Math.min(100, Math.max(0, k.pct));
+      var barC = k.barColor || 'var(--blue)';
+      progressHtml = '<div style="margin-top:8px;display:flex;align-items:center;gap:8px;direction:ltr;">'
+        +'<div style="flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;">'
+          +'<div style="height:100%;width:'+fill+'%;background:'+barC+';border-radius:3px;transition:width 0.4s ease;"></div>'
+        +'</div>'
+        +'<span style="font-family:var(--font-mono);font-size:11px;color:var(--text2);white-space:nowrap;flex-shrink:0;">'+k.pctLabel+'</span>'
+      +'</div>';
+    }
     return '<div class="kpi '+k.cls+'">'
       +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'
         +'<div class="kpi-label" style="margin-bottom:0;">'+k.label+'</div>'
         +iconHtml
       +'</div>'
       +valHtml
-      +'<div class="kpi-sub">'+k.sub+'</div>'
+      +progressHtml
+      +'<div class="kpi-sub" style="margin-top:6px;">'+k.sub+'</div>'
       +'</div>';
   }).join('');
 }
@@ -771,7 +850,7 @@ function render(){
   var r = updateTableCells();
   renderKPIs(r.totalConsumed,r.totalOpp,r.totalExpected,r.totalGap,r.overallPct,r.vals);
   updateProgress();
-  updateRevCost();
+  updateRevCost(); updateApl();
 }
 
 function applyFormatInput(el, arr, idx){
@@ -790,7 +869,7 @@ function handleMarginInput(el){
   var num = Math.min(100, parseInt(raw)||0);
   SEG[idx].profitPct = num/100;
   SEG[idx].margin = num+'%';
-  updateRevCost();
+  updateRevCost(); updateApl();
   updateTableCells();
   scheduleSave();
 }
@@ -805,7 +884,7 @@ function handleMixInput(el){
   var r = updateTableCells();
   renderKPIs(r.totalConsumed,r.totalOpp,r.totalExpected,r.totalGap,r.overallPct,r.vals);
   updateProgress();
-  updateRevCost();
+  updateRevCost(); updateApl();
 }
 
 function handlePctInput(field, el){
@@ -813,12 +892,12 @@ function handlePctInput(field, el){
   var num = parseFloat(raw)||0;
   if(field==='ga')  gaPct  = num;
   if(field==='fin') finPct = num;
-  updateRevCost();
+  updateRevCost(); updateApl();
 }
 function handleInvInput(el){
   var raw = el.value.replace(/[^0-9\-]/g,'');
   invAmt = parseInt(raw)||0;
-  updateRevCost();
+  updateRevCost(); updateApl();
 }
 function showInvInput(){
   var inp=document.getElementById('invInput');
@@ -836,6 +915,21 @@ function hideInvInput(){
   if(val) val.style.display='inline';
   if(edt) edt.style.display='inline';
 }
+function showTotalRevInput(){
+  var disp=document.getElementById('totalRevDisplay');
+  var inp=document.getElementById('totalRev');
+  if(disp) disp.style.display='none';
+  if(inp){ inp.style.display='inline-block'; inp.focus(); inp.select(); }
+}
+function hideTotalRevInput(el){
+  var raw=el.value.replace(/[^0-9]/g,'');
+  var num=parseInt(raw)||0;
+  el.value=raw?num.toLocaleString('en-US'):'';
+  var disp=document.getElementById('totalRevDisplay');
+  if(disp){ disp.textContent=el.value||'0'; disp.style.display='inline-block'; }
+  el.style.display='none';
+}
+
 function handleRevInput(el){
   var raw = el.value.replace(/[^0-9]/g,'');
   var num = parseInt(raw)||0;
@@ -843,6 +937,8 @@ function handleRevInput(el){
   el.value = raw ? num.toLocaleString('en-US') : '';
   var newLen=el.value.length;
   try{el.setSelectionRange(pos+(newLen-oldLen),pos+(newLen-oldLen));}catch(e){}
+  var disp=document.getElementById('totalRevDisplay');
+  if(disp) disp.textContent=el.value||'0';
   render();
 }
 
@@ -856,6 +952,30 @@ function applyLang(){
   for(var i=0;i<5;i++){var sl=document.getElementById('seg-lbl-'+i);if(sl)sl.textContent=t.segPrefix;}
   var thIds=['th0','th1','th2','th3','th4','th5','th6','th7'];
   for(var i=0;i<thIds.length;i++){var el2=document.getElementById(thIds[i]);if(el2)el2.textContent=t.th[i];}
+
+  // APL card labels
+  var aplLabels = isAr ? {
+    apl_title:    'قائمة الدخل المتوقعة',
+    apl_revLabel: 'الإيرادات المحققة + الفرص',
+    apl_costLabel:'تكلفة الإيرادات',
+    apl_grossLabel:'مجمل الربح',
+    apl_gaLabel:  'المصاريف العمومية والإدارية',
+    apl_finLabel: 'تكلفة التمويل',
+    apl_invLabel: 'أرباح تقييم عقارات استثمارية',
+    apl_netLabel: 'صافي الربح',
+    apl_invEdit:  'تعديل'
+  } : {
+    apl_title:    'Expected income statement',
+    apl_revLabel: 'Achieved + opportunities',
+    apl_costLabel:'Revenue cost',
+    apl_grossLabel:'Gross profit',
+    apl_gaLabel:  'G&A expenses',
+    apl_finLabel: 'Finance cost',
+    apl_invLabel: 'Investment properties',
+    apl_netLabel: 'Net profit',
+    apl_invEdit:  'edit'
+  };
+  for(var k in aplLabels){ var ae=document.getElementById(k); if(ae) ae.textContent=aplLabels[k]; }
 }
 
 function toggleLang(){
@@ -871,6 +991,7 @@ function toggleLang(){
 }
 
 document.getElementById('totalRev').addEventListener('input',function(){handleRevInput(this);});
+document.getElementById('totalRev').addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key==='Escape') this.blur(); });
 
 /* ── AUTOSAVE ── */
 var saveTimer = null;
@@ -892,6 +1013,9 @@ function getState(){
     invStruct3Label: document.getElementById('invStruct3Label') ? document.getElementById('invStruct3Label').value : '',
     invStruct4Label: document.getElementById('invStruct4Label') ? document.getElementById('invStruct4Label').value : '',
     invStruct5Label: document.getElementById('invStruct5Label') ? document.getElementById('invStruct5Label').value : '',
+    aplInvAmt: aplInvAmt,
+    apl_gaInput:  document.getElementById('apl_gaInput')  ? document.getElementById('apl_gaInput').value  : '',
+    apl_finInput: document.getElementById('apl_finInput') ? document.getElementById('apl_finInput').value : '',
     finLt: finLt,
     balances: balances,
     margins: SEG.map(function(s){ return s.profitPct; })
@@ -1456,7 +1580,7 @@ function loadAllState(){
     var s=JSON.parse(raw);
 
     // core
-    if(s.totalRev) document.getElementById('totalRev').value=s.totalRev;
+    if(s.totalRev){ document.getElementById('totalRev').value=s.totalRev; var _td=document.getElementById('totalRevDisplay'); if(_td) _td.textContent=s.totalRev; }
     if(s.actual)  for(var i=0;i<s.actual.length;i++) actual[i]=s.actual[i];
     if(s.opps)    for(var i=0;i<s.opps.length;i++)   opps[i]=s.opps[i];
     if(s.mixPct)  for(var i=0;i<s.mixPct.length;i++) mixPct[i]=s.mixPct[i];
@@ -1506,6 +1630,75 @@ function loadAllState(){
   }catch(e){ console.error('loadAllState error',e); }
 }
 
+/* ── ACTUAL P&L (قائمة الدخل المتوقعة) ── */
+var aplInvAmt = 0;
+
+function showAplInvInput(){
+  var v=document.getElementById('apl_invValue');
+  var i=document.getElementById('apl_invInput');
+  var e=document.getElementById('apl_invEdit');
+  if(v) v.style.display='none';
+  if(i){ i.style.display='inline-block'; i.focus(); }
+  if(e) e.style.display='none';
+}
+function hideAplInvInput(){
+  var raw=(document.getElementById('apl_invInput')||{}).value||'';
+  aplInvAmt = parseInt(raw.replace(/[^0-9-]/g,''))||0;
+  var v=document.getElementById('apl_invValue');
+  var i=document.getElementById('apl_invInput');
+  var e=document.getElementById('apl_invEdit');
+  if(v){ v.textContent=aplInvAmt?aplInvAmt.toLocaleString('en-US'):'—'; v.style.display=''; }
+  if(i) i.style.display='none';
+  if(e) e.style.display='inline-block';
+  updateApl();
+}
+
+function updateApl(){
+  // Total = achieved + opportunities
+  var totalActual = actual.reduce(function(s,v){return s+v;},0);
+  var totalOpp    = opps.reduce(function(s,v){return s+v;},0);
+  var totalRev    = totalActual + totalOpp;
+
+  // Weighted cost = sum of (each seg revenue * (1 - profitPct))
+  var totalCost = 0;
+  for(var i=0;i<SEG.length;i++){
+    var segRev = (actual[i]||0) + (opps[i]||0);
+    totalCost += segRev * (1 - SEG[i].profitPct);
+  }
+  var grossProfit = totalRev - totalCost;
+
+  // G&A
+  var gaRaw = parseFloat((document.getElementById('apl_gaInput')||{}).value||0)||0;
+  var gaAmt = -(totalRev * gaRaw / 100);
+
+  // Finance cost
+  var finRaw = parseFloat((document.getElementById('apl_finInput')||{}).value||0)||0;
+  var finAmt = -(totalRev * finRaw / 100);
+
+  // Inv
+  var invInputEl = document.getElementById('apl_invInput');
+  if(invInputEl && invInputEl.style.display!=='none'){
+    aplInvAmt = parseInt((invInputEl.value||'').replace(/[^0-9-]/g,''))||0;
+  }
+
+  // Net
+  var net = grossProfit + gaAmt + finAmt + aplInvAmt;
+
+  function fmt(n){ return n===0?'—': n<0?'('+Math.abs(Math.round(n)).toLocaleString('en-US')+')':Math.round(n).toLocaleString('en-US'); }
+  function pct(n,base){ if(!base) return ''; return Math.round(n/base*100)+'%'; }
+
+  var rv=document.getElementById('apl_revValue');       if(rv) rv.textContent=totalRev?totalRev.toLocaleString('en-US'):'—';
+  var cv=document.getElementById('apl_costValue');      if(cv){ cv.textContent=totalCost?'('+Math.round(totalCost).toLocaleString('en-US')+')':'—'; }
+  var cp=document.getElementById('apl_costPct');        if(cp) cp.textContent=totalRev?'-'+Math.round(totalCost/totalRev*100)+'%':'';
+  var gv=document.getElementById('apl_grossValue');     if(gv){ gv.textContent=fmt(grossProfit); }
+  var gp=document.getElementById('apl_grossPct');       if(gp) gp.textContent=totalRev?Math.round(grossProfit/totalRev*100)+'%':'';
+  var gav=document.getElementById('apl_gaValue');       if(gav) gav.textContent=gaAmt?fmt(gaAmt):'—';
+  var fv=document.getElementById('apl_finValue');       if(fv) fv.textContent=finAmt?fmt(finAmt):'—';
+  var iv=document.getElementById('apl_invValue');       if(iv&&iv.style.display!=='none') iv.textContent=aplInvAmt?aplInvAmt.toLocaleString('en-US'):'—';
+  var nv=document.getElementById('apl_netValue');       if(nv){ nv.textContent=fmt(net); nv.style.color=net<0?'var(--red)':net>0?'var(--green)':'var(--text2)'; }
+  var np=document.getElementById('apl_netPct');         if(np) np.textContent=totalRev?Math.round(net/totalRev*100)+'%':'';
+}
+
 /* ── BALANCE CARDS ── */
 var balances = { balAR:0, balAP:0, balPO:0, balBG:0 };
 
@@ -1544,7 +1737,7 @@ function handleBalInput(key, el){
 function applyStateAndRender(s){
   if(!s) return;
   // core
-  if(s.totalRev) document.getElementById('totalRev').value=s.totalRev;
+  if(s.totalRev){ document.getElementById('totalRev').value=s.totalRev; var _td=document.getElementById('totalRevDisplay'); if(_td) _td.textContent=s.totalRev; }
   if(s.actual)  for(var i=0;i<s.actual.length;i++) actual[i]=s.actual[i];
   if(s.opps)    for(var i=0;i<s.opps.length;i++)   opps[i]=s.opps[i];
   if(s.mixPct)  for(var i=0;i<s.mixPct.length;i++) mixPct[i]=s.mixPct[i];
@@ -1571,6 +1764,9 @@ function applyStateAndRender(s){
   if(s.finLt !== undefined){ finLt = s.finLt; var fl=document.getElementById('finLtInput'); if(fl&&finLt) fl.value=finLt.toLocaleString('en-US'); }
   if(s.balances){ balances=s.balances; ['balAR','balAP','balPO','balBG'].forEach(function(k){ var bel=document.getElementById(k); if(bel&&balances[k]) bel.value=balances[k].toLocaleString('en-US'); }); }
   if(s.margins){ for(var mi=0;mi<s.margins.length;mi++){ SEG[mi].profitPct=s.margins[mi]; SEG[mi].margin=Math.round(s.margins[mi]*100)+'%'; } }
+  if(s.aplInvAmt !== undefined){ aplInvAmt=s.aplInvAmt; var ai=document.getElementById('apl_invValue'); if(ai) ai.textContent=aplInvAmt?aplInvAmt.toLocaleString('en-US'):'—'; }
+  if(s.apl_gaInput  && document.getElementById('apl_gaInput'))  document.getElementById('apl_gaInput').value  = s.apl_gaInput;
+  if(s.apl_finInput && document.getElementById('apl_finInput')) document.getElementById('apl_finInput').value = s.apl_finInput;
   // re-render everything
   tableBuilt=false;
   applyLang(); render(); restoreInputValues();
