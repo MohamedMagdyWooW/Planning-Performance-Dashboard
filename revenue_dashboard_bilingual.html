@@ -32,7 +32,7 @@ body::before{content:'';display:block;position:fixed;top:0;left:0;right:0;height
 .topbar-left{display:flex;flex-direction:column;gap:6px;}
 .topbar-left h1{font-size:30px;font-weight:700;letter-spacing:-0.02em;color:var(--text);font-family:var(--font-main);}
 .topbar-left p{font-size:15px;color:var(--text2);font-family:var(--font-main);margin-top:4px;}
-.topbar-right{display:flex;align-items:flex-start;flex-direction:column;gap:0;background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--radius);padding:10px 14px;width:100%;box-sizing:border-box;}
+.topbar-right{display:flex;align-items:flex-start;flex-direction:column;gap:0;background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--radius);padding:10px 14px;width:100%;box-sizing:border-box;height:100%;}
 .topbar-right label{font-size:12px;color:var(--text2);white-space:nowrap;font-family:var(--font-main);}
 #totalRev{background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:var(--font-mono);font-size:15px;font-weight:500;padding:4px 6px;width:160px;outline:none;transition:border-color 0.2s;direction:ltr;text-align:right;}
 #totalRev:focus{border-bottom-color:var(--blue);}
@@ -52,8 +52,8 @@ body::before{content:'';display:block;position:fixed;top:0;left:0;right:0;height
 .rev-progress-lbl{font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0;}
 
 
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:1rem;}
-.kpi{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.5rem;position:relative;overflow:hidden;box-shadow:0 1px 6px rgba(28,34,55,0.07);}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:1rem;align-items:stretch;}
+.kpi{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.5rem;position:relative;overflow:hidden;box-shadow:0 1px 6px rgba(28,34,55,0.07);display:flex;flex-direction:column;justify-content:space-between;}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0;}
 .kpi.blue::before{background:var(--blue);}
 .kpi.green::before{background:var(--green);}
@@ -100,6 +100,9 @@ tfoot td{padding:12px 14px;background:var(--surface2);border-top:0.5px solid var
 .seg-C{background:var(--amber-dim);color:var(--amber);}
 .seg-D{background:var(--purple-dim);color:var(--purple);}
 .seg-E{background:var(--coral-dim);color:var(--coral);}
+.seg-F{background:rgba(0,180,216,0.12);color:#00b4d8;}
+.seg-G{background:rgba(231,111,81,0.12);color:#e76f51;}
+.seg-H{background:rgba(42,157,143,0.12);color:#2a9d8f;}
 
 input.actual-in{background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:3px 6px;width:110px;text-align:center;outline:none;transition:border-color 0.2s;direction:ltr;}
 input.actual-in:focus{border-bottom-color:var(--blue);}
@@ -166,7 +169,7 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
   </div>
 </div>
 
-<div class="topbar" style="align-items:flex-start;gap:16px;display:grid;grid-template-columns:1fr 360px 360px;">
+<div class="topbar" style="align-items:stretch;gap:16px;display:grid;grid-template-columns:1fr 360px 360px 260px;">
 
   <!-- LEFT: Title + Insights (narrower) -->
   <div class="topbar-left" style="min-width:0;">
@@ -326,12 +329,25 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
       </div>
   </div>
 
+  <!-- SEGMENT SUMMARY CARD -->
+  <div class="topbar-right" style="align-items:flex-start;flex-direction:column;gap:0;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;width:100%;">
+      <span id="segSummaryTitle" style="font-size:14px;font-weight:700;color:var(--text);font-family:var(--font-main);">شرائح المتبقي من المستهدف</span>
+    </div>
+    <div style="display:flex;align-items:center;width:100%;padding:3px 0 6px;border-bottom:1px solid var(--border2);margin-bottom:2px;">
+      <span style="flex:1;font-size:10px;font-weight:600;color:var(--text3);font-family:var(--font-main);" id="segColSeg">الشريحة</span>
+      <span style="width:44px;text-align:right;font-size:10px;font-weight:600;color:var(--text3);font-family:var(--font-main);" id="segColMargin">الهامش</span>
+      <span style="width:90px;text-align:right;font-size:10px;font-weight:600;color:var(--text3);font-family:var(--font-main);" id="segColGap">الفرق</span>
+    </div>
+    <div id="segSummaryBody" style="width:100%;flex:1;"></div>
+  </div>
+
 </div>
 
 <div class="kpi-grid" id="kpiGrid"></div>
 
 <!-- Balance cards -->
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:1.5rem;" id="balanceCards">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:1.5rem;align-items:stretch;" id="balanceCards">
 
   <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(28,34,55,0.06);">
     <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);border-radius:var(--radius) var(--radius) 0 0;"></div>
@@ -559,11 +575,14 @@ var SEG = [
   {id:'B',margin:'15%',profitPct:0.15, color:'#3ecf8e'},
   {id:'C',margin:'30%',profitPct:0.30, color:'#f5a623'},
   {id:'D',margin:'40%',profitPct:0.40, color:'#9b7fff'},
-  {id:'E',margin:'50%',profitPct:0.50, color:'#ff6b6b'}
+  {id:'E',margin:'50%',profitPct:0.50, color:'#ff6b6b'},
+  {id:'F',margin:'20%',profitPct:0.20, color:'#00b4d8'},
+  {id:'G',margin:'25%',profitPct:0.25, color:'#e76f51'},
+  {id:'H',margin:'35%',profitPct:0.35, color:'#2a9d8f'}
 ];
-var actual  = [0,0,0,0,0];
-var opps    = [0,0,0,0,0];
-var mixPct  = [25,8,12,16,39];
+var actual  = [0,0,0,0,0,0,0,0];
+var opps    = [0,0,0,0,0,0,0,0];
+var mixPct  = [20,7,10,13,30,8,7,5];
 var gaPct   = 0;   // G&A % (can be negative)
 var finPct  = 0;   // Finance cost % (can be negative)
 var invAmt  = 0;   // Investment properties absolute amount
@@ -574,7 +593,7 @@ var T = {
   en:{
     title:'Planning Performance Dashboard', sub:'Customer segment performance — expected vs actual',
     revLabel:'Expected income statement', sectionTitle:'Sales planning structure',
-    th:['Seg.','Profit target','Sales mix','Expected rev.','Achieved rev.','Gap','Progress','Opportunities'],
+    th:['Seg.','Profit target','Sales mix','Expected rev.','Achieved rev.','Remaining','Progress','Opportunities'],
     kpiLabels:['Total expected','Total achieved','Gap remaining','Active segments'],
     kpiSubs:function(p,r){return['100% target',p+'% of target',r+'% remaining','with actual data'];},
     totalLabel:'Total', gaugeLabel:'achieved', segPrefix:'Client',
@@ -588,7 +607,7 @@ var T = {
   ar:{
     title:'لوحة معلومات أداء التخطيط', sub:'أداء شرائح العملاء — المتوقع مقابل الفعلي',
     revLabel:'قائمة الدخل المستهدفة', sectionTitle:'هيكل تخطيط المبيعات',
-    th:['الشريحة','هامش الربح','مزيج المبيعات','الإيراد المتوقع','الإيرادات المحققة','الفرق','التقدم','الفرص'],
+    th:['الشريحة','هامش الربح','مزيج المبيعات','الإيراد المتوقع','الإيرادات المحققة','المتبقي من المستهدف','التقدم','الفرص'],
     kpiLabels:['إجمالي المتوقع','إجمالي المحقق','الفرق المتبقي','الشرائح النشطة'],
     kpiSubs:function(p,r){return['100% من الهدف',p+'% من الهدف',r+'% متبقي','شرائح بها بيانات'];},
     totalLabel:'المجموع', gaugeLabel:'إنجاز', segPrefix:'عميل فئة',
@@ -602,14 +621,18 @@ var T = {
 };
 
 function lang(){ return isAr ? T.ar : T.en; }
-function fmt(n){ return (n<0?'(':'')+Math.abs(Math.round(n)).toLocaleString('en-US')+(n<0?')':''); }
+function fmt(n){ n=Number(n)||0; return isNaN(n)?'0':Math.round(n).toLocaleString('en-US'); }
 function fmtSAR(n){ return 'SAR '+fmt(n); }
 function getTotal(){ return parseInt(document.getElementById('totalRev').value.replace(/[^0-9]/g,''))||0; }
 
 function getEffectiveMix(){
-  var sumAD = mixPct[0]+mixPct[1]+mixPct[2]+mixPct[3];
-  var eVal  = Math.max(0, 100 - sumAD);
-  return [mixPct[0],mixPct[1],mixPct[2],mixPct[3],eVal].map(function(v){return v/100;});
+  var sum = 0;
+  for(var i=0;i<SEG.length-1;i++) sum += (mixPct[i]||0);
+  var last = Math.max(0, 100 - sum);
+  var result = [];
+  for(var i=0;i<SEG.length-1;i++) result.push((mixPct[i]||0)/100);
+  result.push(last/100);
+  return result;
 }
 
 function getVals(){
@@ -711,7 +734,7 @@ function buildMixCell(v, i){
     +'<div id="mix-bar-'+i+'" style="width:'+pct+'%;height:100%;background:'+v.color+';border-radius:2px;transition:width 0.3s;"></div>'
     +'</div>';
   var ctrl;
-  if(i < 4){
+  if(i < SEG.length-1){
     ctrl = '<input class="mix-in" id="mix-inp-'+i+'" type="text" inputmode="numeric"'
       +' value="'+mixPct[i]+'" data-idx="'+i+'" oninput="handleMixInput(this)" />'
       +'<span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--text2);">%</span>';
@@ -760,16 +783,27 @@ function updateTableCells(){
     var mb=document.getElementById('mix-bar-'+i);
     if(mb) mb.style.width=Math.round(v.mix*100)+'%';
   }
-  // E value display
-  var eVal=Math.round(getEffectiveMix()[4]*100);
-  var eDisp=document.getElementById('mix-val-E'); if(eDisp) eDisp.textContent=eVal+'%';
-  var ebar=document.getElementById('mix-bar-4'); if(ebar) ebar.style.width=eVal+'%';
+  // Last segment auto value display (H)
+  var lastIdx = SEG.length-1;
+  var lastVal = Math.round(getEffectiveMix()[lastIdx]*100);
+  var eDisp=document.getElementById('mix-val-E'); if(eDisp) eDisp.textContent=lastVal+'%';
+  var ebar=document.getElementById('mix-bar-'+lastIdx); if(ebar) ebar.style.width=lastVal+'%';
 
   var totalGap = totalExpected-totalConsumed-totalOpp;
   var overallPct = totalExpected>0?Math.round((totalConsumed+totalOpp)/totalExpected*100):0;
   var t = lang();
+
+  // Calculate total mix
+  var mixSum = 0;
+  for(var j=0;j<SEG.length;j++) mixSum += (mixPct[j]||0);
+  // Last seg is auto
+  var autoLast = Math.max(0, 100 - (mixSum - (mixPct[SEG.length-1]||0)));
+  var totalMixDisplay = (mixSum - (mixPct[SEG.length-1]||0)) + autoLast;
+  var mixColor = totalMixDisplay===100 ? 'var(--green)' : 'var(--red)';
+
   document.getElementById('tableFooter').innerHTML='<tr>'
-    +'<td colspan="3" class="muted" style="font-size:11px;font-family:var(--font-main);">'+t.totalLabel+'</td>'
+    +'<td colspan="2" class="muted" style="font-size:11px;font-family:var(--font-main);">'+t.totalLabel+'</td>'
+    +'<td style="direction:ltr;"><span style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;color:'+mixColor+';">'+totalMixDisplay+'%</span></td>'
     +'<td style="direction:ltr;">'+fmtSAR(totalExpected)+'</td>'
     +'<td style="color:var(--green);direction:ltr;">'+fmtSAR(totalConsumed)+'</td>'
     +'<td style="color:var(--amber);direction:ltr;">'+fmtSAR(totalOpp)+'</td>'
@@ -780,7 +814,7 @@ function updateTableCells(){
 }
 
 function fmtKPI(val, cls){
-  if(!val || val==='— / 5' || val.indexOf('/')<0 && val.indexOf('SAR')<0) return '<span class="kpi-value '+cls+'">'+val+'</span>';
+  if(!val || val===('— / '+SEG.length) || val.indexOf('/')<0 && val.indexOf('SAR')<0) return '<span class="kpi-value '+cls+'">'+val+'</span>';
   if(val.indexOf('SAR')===0){
     var num = val.replace('SAR ','');
     return '<span class="kpi-value '+cls+'" style="display:flex;align-items:baseline;gap:5px;">'
@@ -800,7 +834,7 @@ function renderKPIs(totalConsumed,totalOpp,totalExpected,totalGap,overallPct,val
     {label:t.kpiLabels[0],value:fmtSAR(totalExpected), sub:subs[0],cls:'blue', valCls:'', icon:0, pct:null},
     {label:t.kpiLabels[1],value:fmtSAR(totalAchieved), sub:subs[1],cls:'green',valCls:totalAchieved>0?'positive':'', icon:1, pct:overallPct, pctLabel:isAr?overallPct+'% محقق':overallPct+'% achieved', barColor:'var(--green)'},
     {label:t.kpiLabels[2],value:fmtSAR(totalGap),      sub:subs[2],cls:totalGap<0?'amber':'gray',valCls:totalGap<0?'negative':'', icon:2, pct:(100-overallPct), pctLabel:isAr?(100-overallPct)+'% متبقي':(100-overallPct)+'% remaining', barColor:'var(--amber)'},
-    {label:t.kpiLabels[3],value:vals.filter(function(v){return v.consumed>0||v.opp>0;}).length+' / 5',sub:subs[3],cls:'gray',valCls:'', icon:3, pct:null}
+    {label:t.kpiLabels[3],value:vals.filter(function(v){return v.consumed>0||v.opp>0;}).length+' / '+SEG.length,sub:subs[3],cls:'gray',valCls:'', icon:3, pct:null}
   ];
   var icons = [
     '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="9" width="3" height="6" rx="1" fill="currentColor" opacity="0.9"/><rect x="6" y="5" width="3" height="10" rx="1" fill="currentColor" opacity="0.9"/><rect x="11" y="1" width="3" height="14" rx="1" fill="currentColor" opacity="0.9"/></svg>',
@@ -847,7 +881,7 @@ function restoreInputValues(){
     var a=document.getElementById('inp-'+i); if(a) a.value=actual[i]?actual[i].toLocaleString('en-US'):'';
     var o=document.getElementById('opp-'+i); if(o) o.value=opps[i]?opps[i].toLocaleString('en-US'):'';
     var m=document.getElementById('margin-inp-'+i); if(m) m.value=Math.round(SEG[i].profitPct*100);
-    if(i<4){var mx=document.getElementById('mix-inp-'+i);if(mx)mx.value=mixPct[i];}
+    if(i<SEG.length-1){var mx=document.getElementById('mix-inp-'+i);if(mx)mx.value=mixPct[i];}
   }
 }
 
@@ -856,7 +890,7 @@ function render(){
   var r = updateTableCells();
   renderKPIs(r.totalConsumed,r.totalOpp,r.totalExpected,r.totalGap,r.overallPct,r.vals);
   updateProgress();
-  updateRevCost(); updateApl();
+  updateRevCost(); updateApl(); updateSegSummary();
 }
 
 function applyFormatInput(el, arr, idx){
@@ -875,7 +909,7 @@ function handleMarginInput(el){
   var num = Math.min(100, parseInt(raw)||0);
   SEG[idx].profitPct = num/100;
   SEG[idx].margin = num+'%';
-  updateRevCost(); updateApl();
+  updateRevCost(); updateApl(); updateSegSummary();
   updateTableCells();
   scheduleSave();
 }
@@ -886,11 +920,34 @@ function handleOppInput(el)   { applyFormatInput(el,opps,  parseInt(el.dataset.i
 function handleMixInput(el){
   var idx = parseInt(el.dataset.idx);
   var raw = el.value.replace(/[^0-9]/g,'');
-  mixPct[idx] = Math.min(100, parseInt(raw)||0);
+  var num = parseInt(raw)||0;
+
+  // Calculate sum of others (excluding current and last)
+  var sumOthers = 0;
+  for(var i=0;i<SEG.length-1;i++){
+    if(i!==idx) sumOthers += (mixPct[i]||0);
+  }
+  // Cap current so total doesn't exceed 100
+  var maxAllowed = Math.max(0, 100 - sumOthers);
+  num = Math.min(num, maxAllowed);
+
+  // Update input display if capped
+  if(num !== parseInt(raw)||0) el.value = num>0 ? num : '';
+
+  mixPct[idx] = num;
+
+  // Auto-calc last segment
+  var sum = 0;
+  for(var i=0;i<SEG.length-1;i++) sum += (mixPct[i]||0);
+  mixPct[SEG.length-1] = Math.max(0, 100-sum);
+  var el2=document.getElementById('mix-val-E');
+  if(el2) el2.textContent=mixPct[SEG.length-1]+'%';
+
   var r = updateTableCells();
   renderKPIs(r.totalConsumed,r.totalOpp,r.totalExpected,r.totalGap,r.overallPct,r.vals);
   updateProgress();
-  updateRevCost(); updateApl();
+  updateRevCost(); updateApl(); updateSegSummary();
+  scheduleSave();
 }
 
 function handlePctInput(field, el){
@@ -898,12 +955,12 @@ function handlePctInput(field, el){
   var num = parseFloat(raw)||0;
   if(field==='ga')  gaPct  = num;
   if(field==='fin') finPct = num;
-  updateRevCost(); updateApl();
+  updateRevCost(); updateApl(); updateSegSummary();
 }
 function handleInvInput(el){
   var raw = el.value.replace(/[^0-9\-]/g,'');
   invAmt = parseInt(raw)||0;
-  updateRevCost(); updateApl();
+  updateRevCost(); updateApl(); updateSegSummary();
 }
 function showInvInput(){
   var inp=document.getElementById('invInput');
@@ -955,7 +1012,7 @@ function applyLang(){
   var ids={titleMain:t.title,titleSub:t.sub,revLabel:t.revLabel,sectionTitle:t.sectionTitle,footerText:t.footer,langBtnLabel:t.langBtn,revCostLabel:t.revCostLabel,revCostSub:t.revCostSub,revProfitLabel:t.revProfitLabel,gaLabel:t.gaLabel,finLabel:t.finLabel,invLabel:t.invLabel,netLabel:t.netLabel};
   for(var k in ids){var el=document.getElementById(k);if(el)el.textContent=ids[k];}
   document.title=t.title;
-  for(var i=0;i<5;i++){var sl=document.getElementById('seg-lbl-'+i);if(sl)sl.textContent=t.segPrefix;}
+  for(var i=0;i<SEG.length;i++){var sl=document.getElementById('seg-lbl-'+i);if(sl)sl.textContent=t.segPrefix;}
   var thIds=['th0','th1','th2','th3','th4','th5','th6','th7'];
   for(var i=0;i<thIds.length;i++){var el2=document.getElementById(thIds[i]);if(el2)el2.textContent=t.th[i];}
 
@@ -992,8 +1049,9 @@ function toggleLang(){
   applyLiqLang(); updateLiq();
   applyInvTgtLang(); updateInvTgt();
   applyFinLang(); updateFinancing();
-  applyBalLang();
+  applyBalLang(); updateSegSummary();
   var pb=document.getElementById('printBtnLabel'); if(pb) pb.textContent=isAr?'تصدير PDF':'Export PDF';
+  updateSegSummary();
 }
 
 document.getElementById('totalRev').addEventListener('input',function(){handleRevInput(this);});
@@ -1698,11 +1756,47 @@ function updateApl(){
   var cp=document.getElementById('apl_costPct');        if(cp) cp.textContent=totalRev?'-'+Math.round(totalCost/totalRev*100)+'%':'';
   var gv=document.getElementById('apl_grossValue');     if(gv){ gv.textContent=fmt(grossProfit); }
   var gp=document.getElementById('apl_grossPct');       if(gp) gp.textContent=totalRev?Math.round(grossProfit/totalRev*100)+'%':'';
-  var gav=document.getElementById('apl_gaValue');       if(gav) gav.textContent=gaAmt?fmt(gaAmt):'—';
-  var fv=document.getElementById('apl_finValue');       if(fv) fv.textContent=finAmt?fmt(finAmt):'—';
+  var gav=document.getElementById('apl_gaValue');       if(gav){ gav.textContent=gaAmt?'('+fmt(Math.abs(gaAmt))+')':'—'; gav.style.color=gaAmt?'var(--red)':'var(--text2)'; }
+  var fv=document.getElementById('apl_finValue');       if(fv){ fv.textContent=finAmt?'('+fmt(Math.abs(finAmt))+')':'—'; fv.style.color=finAmt?'var(--red)':'var(--text2)'; }
   var iv=document.getElementById('apl_invValue');       if(iv&&iv.style.display!=='none') iv.textContent=aplInvAmt?aplInvAmt.toLocaleString('en-US'):'—';
   var nv=document.getElementById('apl_netValue');       if(nv){ nv.textContent=fmt(net); nv.style.color=net<0?'var(--red)':net>0?'var(--green)':'var(--text2)'; }
   var np=document.getElementById('apl_netPct');         if(np) np.textContent=totalRev?Math.round(net/totalRev*100)+'%':'';
+}
+
+function updateSegSummary(){
+  var vals = getVals();
+  var body = document.getElementById('segSummaryBody');
+  if(!body) return;
+
+  // Lang labels
+  var colSeg = document.getElementById('segColSeg');
+  var colMargin = document.getElementById('segColMargin');
+  var colGap = document.getElementById('segColGap');
+  var title = document.getElementById('segSummaryTitle');
+  if(isAr){
+    if(colSeg) colSeg.textContent='الشريحة';
+    if(colMargin) colMargin.textContent='الهامش';
+    if(colGap) colGap.textContent='المتبقي من المستهدف';
+    if(title) title.textContent='شرائح المتبقي من المستهدف';
+  } else {
+    if(colSeg) colSeg.textContent='Seg.';
+    if(colMargin) colMargin.textContent='Margin';
+    if(colGap) colGap.textContent='Remaining';
+    if(title) title.textContent='Remaining by Segment';
+  }
+
+  body.innerHTML = vals.map(function(v){
+    var gap = v.gap;
+    var gapTxt = gap<0 ? '('+fmt(Math.abs(gap))+')' : gap===0 ? '—' : fmt(gap);
+    var gapColor = gap<0 ? 'var(--red)' : gap>0 ? 'var(--green)' : 'var(--text2)';
+    return '<div style="display:flex;align-items:center;width:100%;padding:5px 0;border-bottom:0.5px solid var(--border);">'
+      +'<span style="flex:1;display:flex;align-items:center;gap:5px;">'
+        +'<span class="seg-badge seg-'+v.id+'" style="font-size:10px;width:20px;height:20px;flex-shrink:0;">'+v.id+'</span>'
+      +'</span>'
+      +'<span style="width:44px;text-align:right;font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:500;color:var(--text2);">'+Math.round(v.profitPct*100)+'%</span>'
+      +'<span style="width:90px;text-align:right;font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;color:'+gapColor+';direction:ltr;">'+gapTxt+'</span>'
+      +'</div>';
+  }).join('');
 }
 
 /* ── BALANCE CARDS ── */
@@ -1781,7 +1875,7 @@ function applyStateAndRender(s){
   applyLiqLang(); updateLiq();
   applyInvTgtLang(); updateInvTgt();
   applyFinLang(); updateFinancing();
-  applyBalLang();
+  applyBalLang(); updateSegSummary();
 }
 
 // Try Firebase first, fallback to localStorage
@@ -1800,7 +1894,7 @@ function initDashboard(){
     applyLiqLang(); updateLiq();
     applyInvTgtLang(); updateInvTgt();
     applyFinLang(); updateFinancing();
-    applyBalLang();
+    applyBalLang(); updateSegSummary();
   }
 }
 
@@ -1829,7 +1923,7 @@ if(window._fbReady){
       applyLiqLang(); updateLiq();
       applyInvTgtLang(); updateInvTgt();
       applyFinLang(); updateFinancing();
-      applyBalLang();
+      applyBalLang(); updateSegSummary();
     }
   }, 3000);
 }
