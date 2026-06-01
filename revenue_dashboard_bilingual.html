@@ -540,6 +540,43 @@ input.pct-in:focus{border-bottom-color:var(--blue);}
 
 <div class="footer" id="footerText">Revenue Tracker · Built for Saudi market context · All values in SAR</div>
 
+<!-- Password Screen -->
+<div id="passwordScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;direction:rtl;">
+  <div style="background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--radius);padding:2.5rem 2rem;width:320px;box-shadow:0 4px 24px rgba(28,34,55,0.14);text-align:center;">
+    <h2 style="font-size:18px;font-weight:700;color:var(--text);font-family:var(--font-main);margin-bottom:6px;">لوحة معلومات أداء التخطيط</h2>
+    <p style="font-size:12px;color:var(--text3);font-family:var(--font-main);margin-bottom:20px;">أدخل كلمة المرور للمتابعة</p>
+    <input id="pwInput" type="password" placeholder="كلمة المرور" onkeydown="if(event.key==='Enter')checkPw()"
+      style="width:100%;padding:10px 14px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-size:14px;font-family:var(--font-main);outline:none;box-sizing:border-box;margin-bottom:10px;text-align:center;"
+      onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'" />
+    <div id="pwError" style="font-size:12px;color:var(--red);margin-bottom:10px;min-height:16px;font-family:var(--font-main);"></div>
+    <button onclick="checkPw()" style="width:100%;padding:10px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;font-family:var(--font-main);cursor:pointer;">دخول</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var PASS = 'Ksa00ag$$';
+  var SESSION_KEY = 'wow_dashboard_auth';
+  function checkPw(){
+    var val = document.getElementById('pwInput').value;
+    if(val === PASS){
+      sessionStorage.setItem(SESSION_KEY,'1');
+      document.getElementById('passwordScreen').style.display='none';
+      document.getElementById('pwError').textContent='';
+    } else {
+      document.getElementById('pwError').textContent='كلمة المرور غير صحيحة';
+      document.getElementById('pwInput').value='';
+      document.getElementById('pwInput').focus();
+    }
+  }
+  window.checkPw = checkPw;
+  // Check if already authenticated
+  if(sessionStorage.getItem(SESSION_KEY)==='1'){
+    document.getElementById('passwordScreen').style.display='none';
+  }
+})();
+</script>
+
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
